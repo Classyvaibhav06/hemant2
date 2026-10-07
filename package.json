@@ -1,0 +1,25 @@
+{
+  "name": "freightdesk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.7.0",
+    "next": "^15.5.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^25.0.9",
+    "@types/react": "^19.2.14",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}
