@@ -48,8 +48,8 @@ export default async function DashboardPage() {
   if (pendingDelivery > 0) alerts.push({ text: `${pendingDelivery} bilty(ies) pending delivery`, href: "/bilty?status=BOOKED", tone: "amber" });
   if (undelivered > 0) alerts.push({ text: `${undelivered} undelivered (failed attempt) bilties`, href: "/bilty?status=UNDELIVERED", tone: "red" });
   const creditExceeded = db.prepare(`
-    SELECT c.name, SUM(b.total_charges) due FROM bilty b JOIN customers c ON c.id=b.customer_id
-    WHERE b.status != 'DELIVERED' GROUP BY c.id HAVING due > c.credit_limit LIMIT 3`).all() as any[];
+    SELECT c.name, SUM(b.total_charges) as due FROM bilty b JOIN customers c ON c.id=b.customer_id
+    WHERE b.status != 'DELIVERED' GROUP BY c.id, c.name, c.credit_limit HAVING SUM(b.total_charges) > c.credit_limit LIMIT 3`).all() as any[];
   for (const c of creditExceeded) alerts.push({ text: `Credit limit exceeded: ${c.name} (₹${c.due})`, href: "/customers", tone: "red" });
   const noRate = db.prepare(`
     SELECT v.name FROM vendors v WHERE v.status='ACTIVE' AND NOT EXISTS (
