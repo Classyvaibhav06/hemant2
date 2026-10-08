@@ -28,18 +28,19 @@ export default async function DashboardPage() {
   const todayProfit = Math.round((todayRevenue - todayCost) * 100) / 100;
 
   // 7-day trends
+  const past7Days = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const trendRows = db.prepare(`
     SELECT booking_date d,
       COUNT(*) bilties,
       COALESCE(SUM(total_charges),0) revenue,
       COALESCE(SUM(vendor_cost),0) cost
     FROM bilty
-    WHERE booking_date >= date('now','-6 days')
-    GROUP BY booking_date ORDER BY booking_date`).all() as any[];
+    WHERE booking_date >= ?
+    GROUP BY booking_date ORDER BY booking_date`).all(past7Days) as any[];
   const deliveredTrend = db.prepare(`
     SELECT booking_date d, COUNT(*) c FROM bilty
-    WHERE status='DELIVERED' AND booking_date >= date('now','-6 days')
-    GROUP BY booking_date`).all() as any[];
+    WHERE status='DELIVERED' AND booking_date >= ?
+    GROUP BY booking_date`).all(past7Days) as any[];
 
   // Alerts
   const alerts: { text: string; href: string; tone: string }[] = [];
