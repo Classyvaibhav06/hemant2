@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { IconCheckCircle } from "@/components/icons";
+import { CheckCircle, FloppyDisk, Printer, ArrowCounterClockwise, Calculator, Warning } from "@phosphor-icons/react";
 
 const empty = {
   customer_id: "", vendor_id: "",
@@ -77,20 +77,20 @@ export function BiltyNewClient() {
 
   if (saved) {
     return (
-      <div className="card-p mx-auto max-w-lg animate-fade-up space-y-4 text-center">
-        <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-500">
-          <IconCheckCircle width={34} height={34} />
+      <div className="card-p mx-auto max-w-lg animate-fade-up space-y-5 text-center my-6">
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#00ba7c]/15 text-[#00ba7c] shadow-[0_0_20px_rgba(0,186,124,0.3)]">
+          <CheckCircle size={36} weight="fill" />
         </span>
-        <h1 className="text-2xl font-extrabold tracking-tight">Bilty {saved.bilty_no} saved</h1>
-        <div className="text-sm text-slate-500 space-y-1">
-          <div>Status: <b>{saved.status}</b></div>
-          <div>Customer charges: <b>{money(saved.total_charges)}</b></div>
-          <div>Vendor cost: <b>{money(saved.vendor_cost)}</b></div>
-          <div>Margin: <b>{money(saved.gross_margin)}</b></div>
+        <h1 className="text-2xl font-bold tracking-tight text-[#e7e9ea]">Bilty {saved.bilty_no} Created</h1>
+        <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 text-xs space-y-2 text-left">
+          <div className="flex justify-between"><span className="text-[#71767b]">Status:</span> <span className="font-bold text-[#00ba7c]">{saved.status}</span></div>
+          <div className="flex justify-between"><span className="text-[#71767b]">Customer Charges:</span> <span className="font-mono font-bold text-[#e7e9ea]">{money(saved.total_charges)}</span></div>
+          <div className="flex justify-between"><span className="text-[#71767b]">Vendor Cost:</span> <span className="font-mono text-[#71767b]">{money(saved.vendor_cost)}</span></div>
+          <div className="flex justify-between border-t border-white/[0.06] pt-1.5"><span className="text-[#71767b]">Gross Margin:</span> <span className="font-mono font-bold text-accent-400">{money(saved.gross_margin)}</span></div>
         </div>
-        <div className="flex justify-center gap-2">
-          <a className="btn-secondary" href={`/bilty/${saved.bilty_no}`}>Open Bilty</a>
-          <button className="btn-primary" onClick={() => { setForm(empty); setQuote(null); setSaved(null); }}>Book Another</button>
+        <div className="flex justify-center gap-3">
+          <a className="btn-secondary text-xs" href={`/bilty/${saved.bilty_no}`}>Open Bilty</a>
+          <button className="btn-primary text-xs" onClick={() => { setForm(empty); setQuote(null); setSaved(null); }}>Book Another Bilty</button>
         </div>
       </div>
     );
@@ -98,40 +98,46 @@ export function BiltyNewClient() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <h1 className="text-xl font-extrabold tracking-tight sm:text-2xl">New Bilty / Booking</h1>
-        <div className="text-xs font-medium text-slate-400">Bilty number is auto-generated on save</div>
+      <div className="animate-fade-up flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-accent-500 animate-pulse" />
+            <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Consignment Entry</span>
+          </div>
+          <h1 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-[#e7e9ea]">New Bilty Booking</h1>
+        </div>
+        <div className="font-mono text-xs text-[#71767b]">Auto-generated BLT sequence on submission</div>
       </div>
 
-      <div className="card-p grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="card-p animate-fade-up grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div>
           <label className="label">Customer *</label>
-          <select className="input" value={form.customer_id} onChange={(e) => set("customer_id", e.target.value)}>
-            <option value="">Select…</option>
-            {customers.map((c) => <option key={c.id} value={c.id}>{c.code} — {c.name}</option>)}
+          <select className="input text-sm" value={form.customer_id} onChange={(e) => set("customer_id", e.target.value)}>
+            <option value="" className="bg-[#111111]">Select Customer…</option>
+            {customers.map((c) => <option key={c.id} value={c.id} className="bg-[#111111]">{c.code} — {c.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="label">Vendor *</label>
-          <select className="input" value={form.vendor_id} onChange={(e) => set("vendor_id", e.target.value)}>
-            <option value="">Select…</option>
-            {vendors.map((v) => <option key={v.id} value={v.id}>{v.code} — {v.name}</option>)}
+          <label className="label">Vendor / Transporter *</label>
+          <select className="input text-sm" value={form.vendor_id} onChange={(e) => set("vendor_id", e.target.value)}>
+            <option value="" className="bg-[#111111]">Select Transporter…</option>
+            {vendors.map((v) => <option key={v.id} value={v.id} className="bg-[#111111]">{v.code} — {v.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="label">From *</label>
-          <input className="input" value={form.from_city} onChange={(e) => set("from_city", e.target.value)} placeholder="Origin city" />
+          <label className="label">Origin City *</label>
+          <input className="input text-sm" value={form.from_city} onChange={(e) => set("from_city", e.target.value)} placeholder="From city (e.g. Delhi)" />
         </div>
         <div>
-          <label className="label">To *</label>
-          <input className="input" value={form.to_city} onChange={(e) => set("to_city", e.target.value)} placeholder="Destination city" />
+          <label className="label">Destination City *</label>
+          <input className="input text-sm" value={form.to_city} onChange={(e) => set("to_city", e.target.value)} placeholder="To city (e.g. Mumbai)" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
           <div className="card-p">
-            <h2 className="font-semibold mb-3">Sender</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Sender Details</h2>
             <div className="grid grid-cols-2 gap-3">
               <Inp label="Sender Name *" value={form.sender_name} onChange={(v) => set("sender_name", v)} />
               <Inp label="Sender Mobile" value={form.sender_mobile} onChange={(v) => set("sender_mobile", v)} />
@@ -139,7 +145,7 @@ export function BiltyNewClient() {
             </div>
           </div>
           <div className="card-p">
-            <h2 className="font-semibold mb-3">Receiver</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Receiver Details</h2>
             <div className="grid grid-cols-2 gap-3">
               <Inp label="Receiver Name *" value={form.receiver_name} onChange={(v) => set("receiver_name", v)} />
               <Inp label="Receiver Mobile" value={form.receiver_mobile} onChange={(v) => set("receiver_mobile", v)} />
@@ -147,42 +153,54 @@ export function BiltyNewClient() {
             </div>
           </div>
           <div className="card-p">
-            <h2 className="font-semibold mb-3">Consignment</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Consignment Particulars</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <div>
-                <label className="label">Parcel Type</label>
-                <select className="input" value={form.parcel_type} onChange={(e) => set("parcel_type", e.target.value)}>
-                  <option>PARCEL</option><option>DOCUMENT</option><option>FREIGHT</option><option>COD</option><option>FRAGILE</option>
+                <label className="label">Commodity Type</label>
+                <select className="input text-sm" value={form.parcel_type} onChange={(e) => set("parcel_type", e.target.value)}>
+                  <option value="PARCEL" className="bg-[#111111]">PARCEL</option>
+                  <option value="DOCUMENT" className="bg-[#111111]">DOCUMENT</option>
+                  <option value="FREIGHT" className="bg-[#111111]">FREIGHT</option>
+                  <option value="COD" className="bg-[#111111]">COD</option>
+                  <option value="FRAGILE" className="bg-[#111111]">FRAGILE</option>
                 </select>
               </div>
-              <Inp label="Number of Parcels *" type="number" value={form.parcel_count} onChange={(v) => set("parcel_count", v)} />
+              <Inp label="Parcels Count *" type="number" value={form.parcel_count} onChange={(v) => set("parcel_count", v)} />
               <Inp label="Actual Weight (kg) *" type="number" value={form.actual_weight} onChange={(v) => set("actual_weight", v)} />
               <Inp label="Chargeable Weight (kg) *" type="number" value={form.chargeable_weight} onChange={(v) => set("chargeable_weight", v)} />
               <div>
                 <label className="label">Payment Mode</label>
-                <select className="input" value={form.payment_mode} onChange={(e) => set("payment_mode", e.target.value)}>
-                  <option>CREDIT</option><option>PAID</option><option>TO_PAY</option><option>COD</option>
+                <select className="input text-sm" value={form.payment_mode} onChange={(e) => set("payment_mode", e.target.value)}>
+                  <option value="CREDIT" className="bg-[#111111]">CREDIT</option>
+                  <option value="PAID" className="bg-[#111111]">PAID</option>
+                  <option value="TO_PAY" className="bg-[#111111]">TO_PAY</option>
+                  <option value="COD" className="bg-[#111111]">COD</option>
                 </select>
               </div>
-              <Inp label="COD Amount" type="number" value={form.cod_amount} onChange={(v) => set("cod_amount", v)} />
+              <Inp label="COD Amount (₹)" type="number" value={form.cod_amount} onChange={(v) => set("cod_amount", v)} />
             </div>
           </div>
           <div className="card-p">
-            <h2 className="font-semibold mb-3">Charges</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Charges & Adjustments</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              <Inp label="Freight" type="number" value={form.freight} onChange={(v) => set("freight", v)} />
-              <Inp label="Loading Charge" type="number" value={form.loading_charge} onChange={(v) => set("loading_charge", v)} />
-              <Inp label="Unloading Charge" type="number" value={form.unloading_charge} onChange={(v) => set("unloading_charge", v)} />
-              <Inp label="Other Charges" type="number" value={form.other_charges} onChange={(v) => set("other_charges", v)} />
-              <Inp label="Discount" type="number" value={form.discount} onChange={(v) => set("discount", v)} />
+              <Inp label="Base Freight (₹)" type="number" value={form.freight} onChange={(v) => set("freight", v)} />
+              <Inp label="Loading Charge (₹)" type="number" value={form.loading_charge} onChange={(v) => set("loading_charge", v)} />
+              <Inp label="Unloading Charge (₹)" type="number" value={form.unloading_charge} onChange={(v) => set("unloading_charge", v)} />
+              <Inp label="Other Surcharges (₹)" type="number" value={form.other_charges} onChange={(v) => set("other_charges", v)} />
+              <Inp label="Discount (₹)" type="number" value={form.discount} onChange={(v) => set("discount", v)} />
               <Inp label="Remarks" value={form.remarks} onChange={(v) => set("remarks", v)} />
             </div>
-            <label className="flex items-center gap-2 mt-3 text-sm">
-              <input type="checkbox" checked={form.manual_rate} onChange={(e) => set("manual_rate", e.target.checked)} className="h-4 w-4" />
-              Override rates manually
+            <label className="flex items-center gap-2.5 mt-3 text-xs text-[#e7e9ea] cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={form.manual_rate}
+                onChange={(e) => set("manual_rate", e.target.checked)}
+                className="h-4 w-4 rounded accent-accent-500"
+              />
+              Override rates manually (Admin mode)
             </label>
             {form.manual_rate && (
-              <div className="grid grid-cols-3 gap-3 mt-3">
+              <div className="grid grid-cols-3 gap-3 mt-3 pt-3 border-t border-white/[0.06]">
                 <Inp label="Company Rate ₹/kg" type="number" value={form.company_rate} onChange={(v) => set("company_rate", v)} />
                 <Inp label="Vendor Rate ₹/kg" type="number" value={form.vendor_rate} onChange={(v) => set("vendor_rate", v)} />
                 <Inp label="Commission ₹" type="number" value={form.commission} onChange={(v) => set("commission", v)} />
@@ -194,40 +212,70 @@ export function BiltyNewClient() {
         {/* Live calculation panel */}
         <div className="space-y-4">
           <div className="card-p lg:sticky lg:top-4">
-            <h2 className="font-semibold mb-3">Live Calculation</h2>
-            {quoteErr && <div className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">{quoteErr}</div>}
-            {!quote && !quoteErr && <div className="text-sm text-slate-400">Select vendor and enter chargeable weight to auto-load rates.</div>}
+            <div className="flex items-center gap-2 mb-3">
+              <Calculator size={18} className="text-accent-400" />
+              <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b]">Real-Time Quote</h2>
+            </div>
+            {quoteErr && (
+              <div className="text-xs text-[#ffd400] bg-[#ffd400]/10 border border-[#ffd400]/20 rounded-xl px-3 py-2.5 mb-3 flex items-center gap-2">
+                <Warning size={14} weight="fill" className="shrink-0" />
+                {quoteErr}
+              </div>
+            )}
+            {!quote && !quoteErr && (
+              <div className="text-xs text-[#71767b] py-6 text-center">
+                Select transporter vendor & enter chargeable weight to generate quote.
+              </div>
+            )}
             {quote && (
-              <div className="space-y-2 text-sm">
-                <Row l="Rate config" v={quote.rates.rate_config_id ? `#${quote.rates.rate_config_id}` : "—"} />
-                <Row l="Company rate" v={`${money(quote.rates.company_rate)}/kg`} />
+              <div className="space-y-2 text-xs">
+                <Row l="Rate config" v={quote.rates.rate_config_id ? `#${quote.rates.rate_config_id}` : "Manual"} />
+                <Row l="Customer rate" v={`${money(quote.rates.company_rate)}/kg`} />
                 <Row l="Vendor rate" v={`${money(quote.rates.vendor_rate)}/kg`} />
                 {quote.rates.commission > 0 && <Row l="Commission" v={money(quote.rates.commission)} />}
-                <hr />
-                <Row l="Customer amount" v={money(ch.customer_amount)} bold />
-                <Row l="+ Loading" v={money(form.loading_charge)} />
-                <Row l="+ Unloading" v={money(form.unloading_charge)} />
-                <Row l="+ Other" v={money(form.other_charges)} />
-                <Row l="− Discount" v={money(form.discount)} />
-                <Row l="Total Customer Charge" v={money(ch.total_charges)} bold />
-                <hr />
-                <Row l="Vendor amount" v={money(ch.vendor_amount)} />
-                <Row l="Total Vendor Cost" v={money(ch.vendor_cost)} bold />
-                <Row l="Gross Margin" v={money(ch.gross_margin)} bold />
-                <div className={`rounded-lg px-3 py-2 font-bold ${ch.net_amount >= 0 ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
-                  Net Amount: {money(ch.net_amount)}
+                <div className="divider my-1" />
+                <Row l="Base customer freight" v={money(ch.customer_amount)} bold />
+                <Row l="+ Loading surcharge" v={money(form.loading_charge)} />
+                <Row l="+ Unloading surcharge" v={money(form.unloading_charge)} />
+                <Row l="+ Other charges" v={money(form.other_charges)} />
+                <Row l="− Discount allowed" v={money(form.discount)} />
+                <Row l="Total Customer Charge" v={money(ch.total_charges)} bold highlight="blue" />
+                <div className="divider my-1" />
+                <Row l="Vendor cost" v={money(ch.vendor_cost)} bold />
+                <Row l="Gross margin" v={money(ch.gross_margin)} bold />
+                <div className={`rounded-xl px-3 py-2 font-bold flex justify-between items-center ${
+                  ch.net_amount >= 0 ? "bg-[#00ba7c]/10 text-[#00ba7c] border border-[#00ba7c]/20" : "bg-[#f4212e]/10 text-[#f4212e] border border-[#f4212e]/20"
+                }`}>
+                  <span>Net Estimated Margin:</span>
+                  <span className="font-mono">{money(ch.net_amount)}</span>
                 </div>
               </div>
             )}
-            {error && <div className="text-sm text-red-600 mt-3">{error}</div>}
+            {error && <div className="text-xs font-semibold text-[#f4212e] mt-3">{error}</div>}
             <div className="mt-4 space-y-2">
-              <button className="btn-primary w-full" disabled={saving || !quote} onClick={() => save(false)}>
+              <button
+                className="btn-primary w-full text-xs gap-1.5"
+                disabled={saving || !quote}
+                onClick={() => save(false)}
+              >
+                <FloppyDisk size={15} weight="bold" />
                 {saving ? "Saving…" : "Save Bilty"}
               </button>
-              <button className="btn-secondary w-full" disabled={saving || !quote} onClick={() => save(true)}>
-                Save & Print
+              <button
+                className="btn-secondary w-full text-xs gap-1.5"
+                disabled={saving || !quote}
+                onClick={() => save(true)}
+              >
+                <Printer size={15} />
+                Save & Print Bilty
               </button>
-              <button className="btn-secondary w-full" onClick={() => { setForm(empty); setQuote(null); }}>Reset</button>
+              <button
+                className="btn-secondary w-full text-xs gap-1.5 opacity-70 hover:opacity-100"
+                onClick={() => { setForm(empty); setQuote(null); }}
+              >
+                <ArrowCounterClockwise size={14} />
+                Reset Form
+              </button>
             </div>
           </div>
         </div>
@@ -240,16 +288,22 @@ function Inp({ label, value, onChange, type = "text", className }: { label: stri
   return (
     <div className={className}>
       <label className="label">{label}</label>
-      <input className="input" type={type} value={value ?? ""} onChange={(e) => onChange(e.target.value)} />
+      <input className="input text-sm" type={type} value={value ?? ""} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }
 
-function Row({ l, v, bold }: { l: string; v: string; bold?: boolean }) {
+function Row({ l, v, bold, highlight }: { l: string; v: string; bold?: boolean; highlight?: "blue" | "green" }) {
   return (
-    <div className={`flex justify-between ${bold ? "font-semibold" : ""}`}>
-      <span className="text-slate-500">{l}</span>
-      <span>{v}</span>
+    <div className={`flex justify-between py-0.5 ${bold ? "font-semibold" : ""}`}>
+      <span className="text-[#71767b]">{l}</span>
+      <span className={`font-mono ${
+        highlight === "blue" ? "text-accent-400 font-bold" :
+        highlight === "green" ? "text-[#00ba7c] font-bold" :
+        "text-[#e7e9ea]"
+      }`}>
+        {v}
+      </span>
     </div>
   );
 }

@@ -2,18 +2,18 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { cookies } from "next/headers";
 import { getSessionUser, can } from "@/lib/types";
-import { IconChevronRight, IconPlus, IconSearch } from "@/components/icons";
+import { Plus, MagnifyingGlass, CaretRight, Package, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_TONE: Record<string, string> = {
-  BOOKED: "bg-slate-100 text-slate-600",
-  DISPATCHED: "bg-sky-50 text-sky-700",
-  IN_TRANSIT: "bg-brand-50 text-brand-700",
-  AT_DESTINATION: "bg-violet-50 text-violet-700",
-  OUT_FOR_DELIVERY: "bg-amber-50 text-amber-700",
-  DELIVERED: "bg-emerald-50 text-emerald-700",
-  UNDELIVERED: "bg-rose-50 text-rose-700",
+const STATUS_TONE: Record<string, { bg: string; text: string; border: string; dot: string }> = {
+  BOOKED: { bg: "bg-zinc-800/80", text: "text-zinc-300", border: "border-zinc-700/60", dot: "bg-zinc-400" },
+  DISPATCHED: { bg: "bg-sky-500/10", text: "text-sky-400", border: "border-sky-500/20", dot: "bg-sky-400" },
+  IN_TRANSIT: { bg: "bg-accent-500/10", text: "text-accent-400", border: "border-accent-500/20", dot: "bg-accent-400" },
+  AT_DESTINATION: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20", dot: "bg-purple-400" },
+  OUT_FOR_DELIVERY: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", dot: "bg-amber-400" },
+  DELIVERED: { bg: "bg-[#00ba7c]/10", text: "text-[#00ba7c]", border: "border-[#00ba7c]/20", dot: "bg-[#00ba7c]" },
+  UNDELIVERED: { bg: "bg-[#f4212e]/10", text: "text-[#f4212e]", border: "border-[#f4212e]/20", dot: "bg-[#f4212e]" },
 };
 
 const STATUSES = ["BOOKED", "DISPATCHED", "IN_TRANSIT", "AT_DESTINATION", "OUT_FOR_DELIVERY", "DELIVERED", "UNDELIVERED"];
@@ -35,107 +35,177 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
       {/* Header */}
       <div className="animate-fade-up flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">Bilties</h1>
-          <p className="mt-0.5 text-sm font-medium text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-accent-500 animate-pulse" />
+            <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Consignments</span>
+          </div>
+          <h1 className="mt-1 text-xl font-bold tracking-tight text-[#e7e9ea] sm:text-2xl">Bilties & Bookings</h1>
+          <p className="mt-0.5 text-xs text-[#71767b]">
             {rows.length} {rows.length === 1 ? "consignment" : "consignments"}
             {sp.status ? ` · ${sp.status.replaceAll("_", " ")}` : ""}
           </p>
         </div>
         {can(user.role, "add") && (
-          <Link href="/bilty/new" className="btn-primary shrink-0">
-            <IconPlus width={16} height={16} strokeWidth={2.4} />
+          <Link href="/bilty/new" className="btn-primary shrink-0 text-sm">
+            <Plus size={16} weight="bold" />
             New Bilty
           </Link>
         )}
       </div>
 
-      {/* Search + filters */}
+      {/* Search + filters (X & Armandev style) */}
       <div className="card animate-fade-up space-y-3 p-3.5" style={{ animationDelay: "40ms" }}>
         <form className="flex flex-col gap-2 sm:flex-row" action="/bilty">
           <div className="relative flex-1">
-            <IconSearch width={17} height={17} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-slate-400" />
-            <input name="q" defaultValue={sp.q} className="input pl-10" placeholder="Search bilty no / customer / receiver" />
+            <MagnifyingGlass size={17} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#71767b]" />
+            <input
+              name="q"
+              defaultValue={sp.q}
+              className="input pl-10 text-sm"
+              placeholder="Search bilty no / customer / receiver / phone..."
+            />
           </div>
           {sp.status && <input type="hidden" name="status" value={sp.status} />}
-          <select name="status" defaultValue={sp.status || ""} className="input sm:w-44">
-            <option value="">All statuses</option>
-            {STATUSES.map((s) => <option key={s} value={s}>{s.replaceAll("_", " ")}</option>)}
+          <select
+            name="status"
+            defaultValue={sp.status || ""}
+            className="input sm:w-44 text-sm"
+          >
+            <option value="" className="bg-[#111111] text-[#e7e9ea]">All statuses</option>
+            {STATUSES.map((s) => (
+              <option key={s} value={s} className="bg-[#111111] text-[#e7e9ea]">{s.replaceAll("_", " ")}</option>
+            ))}
           </select>
-          <button className="btn-primary shrink-0">Search</button>
+          <button className="btn-primary shrink-0 text-sm">Filter</button>
         </form>
-        <div className="no-scrollbar -mx-3.5 flex gap-1.5 overflow-x-auto px-3.5">
+        <div className="no-scrollbar -mx-3.5 flex gap-1.5 overflow-x-auto px-3.5 pt-1">
           <Link
             href="/bilty"
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold whitespace-nowrap transition ${
-              !sp.status ? "bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
+              !sp.status
+                ? "bg-accent-500 text-white shadow-[0_0_12px_rgba(29,155,240,0.4)]"
+                : "border border-white/[0.08] bg-white/[0.03] text-[#71767b] hover:bg-white/[0.07] hover:text-[#e7e9ea]"
             }`}
           >
-            All
+            All Bilties
           </Link>
-          {STATUSES.map((s) => (
-            <Link
-              key={s}
-              href={`/bilty?status=${s}`}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold whitespace-nowrap transition ${
-                sp.status === s ? "bg-gradient-to-b from-brand-500 to-brand-600 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-              }`}
-            >
-              {s.replaceAll("_", " ")}
-            </Link>
-          ))}
+          {STATUSES.map((s) => {
+            const tone = STATUS_TONE[s];
+            const active = sp.status === s;
+            return (
+              <Link
+                key={s}
+                href={`/bilty?status=${s}`}
+                className={`inline-flex items-center gap-1.5 shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
+                  active
+                    ? "bg-accent-500 text-white shadow-[0_0_12px_rgba(29,155,240,0.4)]"
+                    : "border border-white/[0.08] bg-white/[0.03] text-[#71767b] hover:bg-white/[0.07] hover:text-[#e7e9ea]"
+                }`}
+              >
+                <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
+                {s.replaceAll("_", " ")}
+              </Link>
+            );
+          })}
         </div>
       </div>
 
-      {/* Desktop table */}
+      {/* Desktop table (X dark theme) */}
       <div className="card animate-fade-up overflow-x-auto hidden sm:block" style={{ animationDelay: "80ms" }}>
-        <table className="w-full">
-          <thead><tr>
-            <th className="th">Bilty No</th><th className="th">Date</th><th className="th">Customer</th><th className="th">From → To</th>
-            <th className="th">Receiver</th><th className="th">Parcels</th><th className="th">Amount</th><th className="th">Status</th>
-          </tr></thead>
-          <tbody>
-            {rows.map((b) => (
-              <tr key={b.id} className="transition-colors hover:bg-brand-50/40">
-                <td className="td"><Link className="font-mono text-[13px] font-bold text-brand-600 hover:text-brand-700 hover:underline" href={`/bilty/${b.bilty_no}`}>{b.bilty_no}</Link></td>
-                <td className="td whitespace-nowrap text-slate-500">{b.booking_date}</td>
-                <td className="td font-medium text-slate-800">{b.customer_name}</td>
-                <td className="td"><span className="text-slate-600">{b.from_city} <span className="text-slate-300">→</span> {b.to_city}</span></td>
-                <td className="td">{b.receiver_name}</td>
-                <td className="td">{b.parcel_count}</td>
-                <td className="td font-semibold text-slate-800">₹{b.total_charges}</td>
-                <td className="td"><span className={`badge ${STATUS_TONE[b.status]}`}>{b.status.replaceAll("_", " ")}</span></td>
+        <table className="w-full text-left">
+          <thead>
+            <tr>
+              <th className="th">Bilty No</th>
+              <th className="th">Date</th>
+              <th className="th">Customer</th>
+              <th className="th">From → To</th>
+              <th className="th">Receiver</th>
+              <th className="th text-right">Parcels</th>
+              <th className="th text-right">Amount</th>
+              <th className="th">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/[0.05]">
+            {rows.map((b) => {
+              const tone = STATUS_TONE[b.status] || STATUS_TONE.BOOKED;
+              return (
+                <tr key={b.id} className="transition-colors hover:bg-white/[0.03] group">
+                  <td className="td">
+                    <Link
+                      className="font-mono text-xs font-bold text-accent-400 hover:text-accent-300 flex items-center gap-1 group-hover:underline"
+                      href={`/bilty/${b.bilty_no}`}
+                    >
+                      {b.bilty_no}
+                      <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </td>
+                  <td className="td whitespace-nowrap font-mono text-xs text-[#71767b]">{b.booking_date}</td>
+                  <td className="td font-medium text-[#e7e9ea]">{b.customer_name}</td>
+                  <td className="td">
+                    <span className="text-xs text-[#71767b]">
+                      <span className="text-[#e7e9ea]">{b.from_city}</span> <span className="text-[#525252]">→</span> <span className="text-[#e7e9ea]">{b.to_city}</span>
+                    </span>
+                  </td>
+                  <td className="td text-[#e7e9ea] text-xs">{b.receiver_name}</td>
+                  <td className="td text-right font-mono text-xs text-[#71767b]">{b.parcel_count}</td>
+                  <td className="td text-right font-mono text-xs font-bold text-[#e7e9ea]">₹{b.total_charges}</td>
+                  <td className="td">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${tone.bg} ${tone.text} ${tone.border}`}>
+                      <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
+                      {b.status.replaceAll("_", " ")}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+            {rows.length === 0 && (
+              <tr>
+                <td className="td py-12 text-center text-sm font-medium text-[#71767b]" colSpan={8}>
+                  No bilties found matching the criteria
+                </td>
               </tr>
-            ))}
-            {rows.length === 0 && <tr><td className="td py-10 text-center font-medium text-slate-400" colSpan={8}>No bilties found</td></tr>}
+            )}
           </tbody>
         </table>
       </div>
 
-      {/* Mobile card list */}
-      <div className="space-y-3 sm:hidden">
-        {rows.length === 0 && <div className="card-p py-10 text-center text-sm font-medium text-slate-400">No bilties found</div>}
-        {rows.map((b, i) => (
-          <Link
-            key={b.id}
-            href={`/bilty/${b.bilty_no}`}
-            className="card animate-fade-up block p-4 transition active:scale-[0.99]"
-            style={{ animationDelay: `${Math.min(i * 40, 240)}ms` }}
-          >
-            <div className="mb-2 flex items-start justify-between gap-2">
-              <span className="font-mono text-[13px] font-bold text-brand-600">{b.bilty_no}</span>
-              <span className={`badge shrink-0 ${STATUS_TONE[b.status]}`}>{b.status.replaceAll("_", " ")}</span>
-            </div>
-            <div className="text-[15px] font-bold text-slate-800">{b.receiver_name}</div>
-            <div className="mt-0.5 text-xs font-medium text-slate-500">{b.customer_name} · {b.from_city} → {b.to_city}</div>
-            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5 text-xs">
-              <span className="font-medium text-slate-400">{b.booking_date}</span>
-              <span className="flex items-center gap-1.5 font-bold text-slate-800">
-                ₹{b.total_charges} · {b.parcel_count} pcs
-                <IconChevronRight width={14} height={14} className="text-slate-300" />
-              </span>
-            </div>
-          </Link>
-        ))}
+      {/* Mobile card list (X Feed style) */}
+      <div className="space-y-2.5 sm:hidden">
+        {rows.length === 0 && (
+          <div className="card p-8 text-center text-sm font-medium text-[#71767b]">
+            No bilties found
+          </div>
+        )}
+        {rows.map((b, i) => {
+          const tone = STATUS_TONE[b.status] || STATUS_TONE.BOOKED;
+          return (
+            <Link
+              key={b.id}
+              href={`/bilty/${b.bilty_no}`}
+              className="card animate-fade-up block p-4 transition-all active:scale-[0.98] hover:border-white/[0.12]"
+              style={{ animationDelay: `${Math.min(i * 30, 200)}ms` }}
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <span className="font-mono text-xs font-bold text-accent-400">{b.bilty_no}</span>
+                <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${tone.bg} ${tone.text} ${tone.border}`}>
+                  <span className={`h-1 w-1 rounded-full ${tone.dot}`} />
+                  {b.status.replaceAll("_", " ")}
+                </span>
+              </div>
+              <div className="text-sm font-bold text-[#e7e9ea]">{b.receiver_name}</div>
+              <div className="mt-0.5 text-xs text-[#71767b]">
+                {b.customer_name} · <span className="text-[#a3a3a3]">{b.from_city} → {b.to_city}</span>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-2.5 text-xs">
+                <span className="font-mono text-[#71767b]">{b.booking_date}</span>
+                <span className="flex items-center gap-1.5 font-bold text-[#e7e9ea]">
+                  ₹{b.total_charges} · {b.parcel_count} pcs
+                  <CaretRight size={14} className="text-[#71767b]" />
+                </span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

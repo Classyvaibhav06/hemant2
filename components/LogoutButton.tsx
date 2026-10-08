@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { IconLogout } from "@/components/icons";
+import { SignOut } from "@phosphor-icons/react";
 
 export function LogoutButton({ className }: { className?: string }) {
   const router = useRouter();
@@ -16,10 +16,10 @@ export function LogoutButton({ className }: { className?: string }) {
       aria-label="Sign out"
       className={
         className ??
-        "grid h-9 w-9 cursor-pointer place-items-center rounded-xl text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"
+        "grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[#525252] transition hover:bg-white/[0.06] hover:text-[#f4212e]"
       }
     >
-      <IconLogout width={18} height={18} />
+      <SignOut size={18} />
     </button>
   );
 }

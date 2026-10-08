@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { IconAlert, IconLock, IconLogo, IconUser } from "@/components/icons";
+import { Warning, Lock, User, Truck } from "@phosphor-icons/react";
 
 const DEMO_ACCOUNTS: { label: string; desc: string; u: string; p: string; accent: boolean }[] = [
   { label: "Admin", desc: "Full access", u: "admin", p: "admin123", accent: true },
@@ -33,74 +33,93 @@ export default function LoginPage() {
     window.location.href = "/dashboard";
   }
 
-  function setPreset(u: string, p: string) {
-    setUsername(u);
-    setPassword(p);
-    setError("");
-  }
-
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-slate-50 px-4 py-10">
-      {/* Ambient background */}
+    <div className="relative grid min-h-[100dvh] place-items-center overflow-hidden bg-[#0a0a0a] px-4 py-10">
+      {/* Background ambient glow */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute -top-32 -right-24 h-[420px] w-[420px] rounded-full bg-brand-200/50 blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 h-[460px] w-[460px] rounded-full bg-violet-200/40 blur-3xl" />
-        <div className="absolute top-1/3 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-sky-100/60 blur-3xl" />
+        <div className="absolute top-0 left-1/2 h-[500px] w-[600px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-accent-500/10 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 h-[300px] w-[400px] translate-x-1/4 translate-y-1/3 rounded-full bg-accent-700/8 blur-[100px]" />
+        {/* Grid pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `linear-gradient(rgb(255 255 255) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255) 1px, transparent 1px)`,
+            backgroundSize: "64px 64px",
+          }}
+        />
       </div>
 
-      <div className="animate-fade-up relative w-full max-w-md">
-        <div className="rounded-3xl border border-white/70 bg-white/90 p-7 shadow-lift backdrop-blur-xl sm:p-9">
+      <div className="animate-fade-up relative w-full max-w-[400px]">
+        {/* Card */}
+        <div className="rounded-2xl border border-white/[0.08] bg-[#111111] p-8 shadow-lift">
           {/* Brand */}
           <div className="mb-8 flex flex-col items-center text-center">
-            <span className="mb-4 grid h-16 w-16 place-items-center rounded-[22px] bg-gradient-to-br from-brand-500 to-violet-600 text-white shadow-float">
-              <IconLogo width={32} height={32} />
+            <span className="mb-4 grid h-14 w-14 place-items-center rounded-[18px] bg-accent-500 text-white shadow-glow">
+              <Truck weight="fill" size={28} />
             </span>
-            <h1 className="text-[26px] font-extrabold tracking-tight text-slate-900">FreightDesk</h1>
-            <p className="mt-1 text-sm font-medium text-slate-500">Transport Management System</p>
+            <h1 className="text-[22px] font-bold tracking-tight text-[#e7e9ea]">FreightDesk</h1>
+            <p className="mt-1 text-sm text-[#71767b]">Transport Management System</p>
           </div>
 
           <form onSubmit={submit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Username / Mobile</label>
+              <label className="mb-1.5 block text-[12px] font-semibold text-[#71767b] tracking-wide uppercase">
+                Username
+              </label>
               <div className="relative">
-                <IconUser width={18} height={18} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-slate-400" />
+                <User
+                  size={16}
+                  className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#525252]"
+                />
                 <input
-                  className="input pl-10.5"
+                  className="input pl-9"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
                   required
+                  placeholder="Enter username"
                 />
               </div>
             </div>
+
             <div>
-              <label className="mb-1.5 block text-[13px] font-semibold text-slate-700">Password</label>
+              <label className="mb-1.5 block text-[12px] font-semibold text-[#71767b] tracking-wide uppercase">
+                Password
+              </label>
               <div className="relative">
-                <IconLock width={18} height={18} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-slate-400" />
+                <Lock
+                  size={16}
+                  className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#525252]"
+                />
                 <input
                   type="password"
-                  className="input pl-10.5"
+                  className="input pl-9"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
+                  placeholder="Enter password"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-2.5 text-[13px] font-medium text-rose-700">
-                <IconAlert width={16} height={16} className="shrink-0" />
+              <div className="flex items-center gap-2.5 rounded-xl border border-[#f4212e]/20 bg-[#f4212e]/10 px-3.5 py-2.5 text-[13px] font-medium text-[#f4212e]">
+                <Warning size={16} weight="fill" className="shrink-0" />
                 {error}
               </div>
             )}
 
-            <button type="submit" disabled={busy} className="btn-primary w-full py-3 text-[15px]">
+            <button
+              type="submit"
+              disabled={busy}
+              className="btn-primary w-full py-3 text-[15px] rounded-xl mt-2"
+            >
               {busy ? (
                 <span className="flex items-center gap-2">
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
-                    <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-20" />
+                    <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                   </svg>
                   Signing in…
                 </span>
@@ -111,31 +130,39 @@ export default function LoginPage() {
           </form>
 
           {/* Demo accounts */}
-          <div className="mt-7 border-t border-slate-100 pt-5">
-            <div className="mb-3 text-center text-[11px] font-bold tracking-wider text-slate-400 uppercase">
-              Quick fill · demo accounts
+          <div className="mt-7 border-t border-white/[0.06] pt-5">
+            <div className="mb-3 text-center text-[10px] font-bold tracking-[0.12em] text-[#3a3a3a] uppercase">
+              Demo accounts
             </div>
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-3 gap-2">
               {DEMO_ACCOUNTS.map((a) => (
                 <button
                   key={a.u}
                   type="button"
-                  onClick={() => setPreset(a.u, a.p)}
+                  onClick={() => {
+                    setUsername(a.u);
+                    setPassword(a.p);
+                    setError("");
+                  }}
                   className={`cursor-pointer rounded-xl border px-2 py-2.5 text-center transition-all duration-200 active:scale-95 ${
                     a.accent
-                      ? "border-brand-200 bg-brand-50/70 hover:border-brand-300 hover:bg-brand-50"
-                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                      ? "border-accent-500/30 bg-accent-500/10 hover:border-accent-500/50 hover:bg-accent-500/15"
+                      : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.06]"
                   }`}
                 >
-                  <span className="block text-[13px] font-bold text-slate-800">{a.label}</span>
-                  <span className="mt-0.5 block text-[10px] font-medium text-slate-400">{a.desc}</span>
+                  <span className={`block text-[12px] font-bold ${a.accent ? "text-accent-400" : "text-[#e7e9ea]"}`}>
+                    {a.label}
+                  </span>
+                  <span className="mt-0.5 block text-[10px] text-[#525252]">{a.desc}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <p className="mt-6 text-center text-xs font-medium text-slate-400">© {new Date().getFullYear()} FreightDesk</p>
+        <p className="mt-5 text-center text-[11px] text-[#3a3a3a]">
+          © {new Date().getFullYear()} FreightDesk
+        </p>
       </div>
     </div>
   );

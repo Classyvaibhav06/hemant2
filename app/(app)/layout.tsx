@@ -2,9 +2,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSessionUser, can } from "@/lib/types";
 import type { Action } from "@/lib/types";
-import { SidebarNav, initials } from "@/components/SidebarNav";
+import { SidebarNav } from "@/components/SidebarNav";
 import { MobileNav } from "@/components/MobileNav";
-import { IconLogo } from "@/components/icons";
 
 type NavItemDef = { href: string; label: string; action?: Action; icon: string };
 
@@ -38,7 +37,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const user = getSessionUser(cookieStore);
   if (!user) redirect("/login");
 
-  // Filter nav items by role
   const visibleGroups = NAV_GROUPS.map((g) => ({
     title: g.title,
     items: g.items
@@ -47,14 +45,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }));
 
   return (
-    <div className="min-h-screen bg-slate-50/80">
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Desktop sidebar */}
       <SidebarNav groups={visibleGroups} user={user} />
 
+      {/* Mobile: top header + bottom tabs + drawer */}
       <MobileNav groups={visibleGroups} user={user} />
 
       {/* Main content */}
-      <main className="md:pl-64">
-        <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 pb-12 md:px-8 md:pt-8 md:pb-12">{children}</div>
+      <main className="md:pl-[244px]">
+        <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 pb-24 md:px-8 md:pt-8 md:pb-12">
+          {children}
+        </div>
       </main>
     </div>
   );
