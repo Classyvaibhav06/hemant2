@@ -137,7 +137,16 @@ function createNeonDb(): DatabaseInterface {
           return (res.rows && res.rows[0]) ? (res.rows[0] as T) : undefined;
         },
         run(...args: any[]): { lastInsertRowid: number; changes: number } {
-          const res = executeNeonSync(insertWithReturning, args);
+          let res: any;
+          if (isInsert && !/session_tokens/i.test(runSql) && !/returning/i.test(runSql)) {
+            try {
+              res = executeNeonSync(`${runSql.replace(/;+\s*$/, "")} RETURNING id`, args);
+            } catch {
+              res = executeNeonSync(runSql, args);
+            }
+          } else {
+            res = executeNeonSync(runSql, args);
+          }
           const lastId = res.rows?.[0]?.id ?? 0;
           return {
             lastInsertRowid: Number(lastId),
