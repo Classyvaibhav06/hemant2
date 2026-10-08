@@ -25,8 +25,13 @@ export default function LoginPage() {
       setError(j.error || "Login failed");
       return;
     }
-    router.push("/");
-    router.refresh();
+    window.location.href = "/dashboard";
+  }
+
+  function setPreset(u: string, p: string) {
+    setUsername(u);
+    setPassword(p);
+    setError("");
   }
 
   return (
@@ -63,8 +68,31 @@ export default function LoginPage() {
             {busy ? "Signing in..." : "Login"}
           </button>
         </form>
-        <div className="mt-4 text-xs text-slate-400 text-center">
-          Demo: admin / admin123 &nbsp;·&nbsp; booking / booking123 &nbsp;·&nbsp; viewer / viewer123
+        <div className="mt-5 pt-4 border-t border-slate-100">
+          <div className="text-xs text-slate-500 text-center mb-2 font-medium">Quick Fill Demo Accounts:</div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setPreset("admin", "admin123")}
+              className="flex-1 py-1 px-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded border border-slate-200 font-medium"
+            >
+              Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => setPreset("booking", "booking123")}
+              className="flex-1 py-1 px-2 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 rounded border border-blue-200 font-medium"
+            >
+              Booking
+            </button>
+            <button
+              type="button"
+              onClick={() => setPreset("viewer", "viewer123")}
+              className="flex-1 py-1 px-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded border border-slate-200 font-medium"
+            >
+              Viewer
+            </button>
+          </div>
         </div>
       </div>
     </div>
