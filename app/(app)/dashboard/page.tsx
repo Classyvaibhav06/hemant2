@@ -7,8 +7,9 @@ import { statusLabel } from "@/lib/bilty";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const user = getSessionUser(await cookies())!;
-  const today = new Date().toISOString().slice(0, 10);
+  try {
+    const user = getSessionUser(await cookies())!;
+    const today = new Date().toISOString().slice(0, 10);
 
   const one = (sql: string, ...args: any[]) => (db.prepare(sql).get(...args) as any)?.v ?? 0;
   const todayBilties = one("SELECT COUNT(*) v FROM bilty WHERE booking_date = ?", today);
@@ -139,6 +140,15 @@ export default async function DashboardPage() {
       </div>
     </div>
   );
+  } catch (err: any) {
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
+        <h2 className="text-lg font-bold mb-2">Dashboard Error</h2>
+        <p className="font-mono text-sm whitespace-pre-wrap">{err?.message || String(err)}</p>
+        <pre className="mt-4 text-xs opacity-70 overflow-auto">{err?.stack}</pre>
+      </div>
+    );
+  }
 }
 
 function TrendChart({ rows }: { rows: any[] }) {
