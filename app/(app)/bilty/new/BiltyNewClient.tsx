@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconCheckCircle } from "@/components/icons";
 
 const empty = {
   customer_id: "", vendor_id: "",
@@ -76,9 +77,11 @@ export function BiltyNewClient() {
 
   if (saved) {
     return (
-      <div className="max-w-lg mx-auto card-p text-center space-y-4">
-        <div className="text-5xl">✅</div>
-        <h1 className="text-2xl font-bold">Bilty {saved.bilty_no} saved</h1>
+      <div className="card-p mx-auto max-w-lg animate-fade-up space-y-4 text-center">
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-500">
+          <IconCheckCircle width={34} height={34} />
+        </span>
+        <h1 className="text-2xl font-extrabold tracking-tight">Bilty {saved.bilty_no} saved</h1>
         <div className="text-sm text-slate-500 space-y-1">
           <div>Status: <b>{saved.status}</b></div>
           <div>Customer charges: <b>{money(saved.total_charges)}</b></div>
@@ -96,8 +99,8 @@ export function BiltyNewClient() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <h1 className="text-xl sm:text-2xl font-bold">New Bilty / Booking</h1>
-        <div className="text-xs text-slate-500">Bilty number is auto-generated on save</div>
+        <h1 className="text-xl font-extrabold tracking-tight sm:text-2xl">New Bilty / Booking</h1>
+        <div className="text-xs font-medium text-slate-400">Bilty number is auto-generated on save</div>
       </div>
 
       <div className="card-p grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">

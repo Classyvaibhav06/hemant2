@@ -80,14 +80,14 @@ export function RatesClient({ role }: { role: string }) {
           </tr></thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="hover:bg-slate-50">
+              <tr key={r.id} className="transition-colors hover:bg-brand-50/40">
                 <td className="td">{r.vendor_name}</td>
                 <td className="td font-medium">{r.name}</td>
                 <td className="td">{r.commission_type}</td>
                 <td className="td">₹{r.commission_value}</td>
                 <td className="td">{r.min_weight} – {r.max_weight || "∞"}</td>
                 <td className="td">{r.valid_from}</td>
-                <td className="td">{r.active ? <span className="badge bg-emerald-100 text-emerald-700">Active</span> : <span className="badge bg-slate-200 text-slate-600">Inactive</span>}</td>
+                <td className="td">{r.active ? <span className="badge bg-emerald-50 text-emerald-700">Active</span> : <span className="badge bg-slate-100 text-slate-600">Inactive</span>}</td>
                 <td className="td text-right whitespace-nowrap">
                   <button className="text-blue-600 text-sm mr-2" onClick={() => setHistoryOf(r)}>History</button>
                   {canEdit && <button className="text-slate-600 text-sm mr-2" onClick={() => setEditing(r)}>Edit</button>}

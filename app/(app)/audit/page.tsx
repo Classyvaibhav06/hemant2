@@ -12,7 +12,10 @@ export default async function AuditPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl sm:text-2xl font-bold">Audit Log</h1>
+      <div className="animate-fade-up">
+        <h1 className="text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">Audit Log</h1>
+        <p className="mt-0.5 text-sm font-medium text-slate-400">Last {rows.length} recorded actions</p>
+      </div>
       <div className="card overflow-x-auto">
         <table className="w-full">
           <thead><tr>
@@ -21,7 +24,7 @@ export default async function AuditPage() {
           </tr></thead>
           <tbody>
             {rows.map((a) => (
-              <tr key={a.id}>
+              <tr key={a.id} className="transition-colors hover:bg-brand-50/40">
                 <td className="td text-xs whitespace-nowrap">{new Date(a.at).toLocaleString()}</td>
                 <td className="td">{a.username}</td>
                 <td className="td font-mono text-xs">{a.action}</td>

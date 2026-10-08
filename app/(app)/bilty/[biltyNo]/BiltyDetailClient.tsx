@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 const STATUS_TONE: Record<string, string> = {
-  BOOKED: "bg-slate-100 text-slate-700",
-  DISPATCHED: "bg-blue-100 text-blue-700",
-  IN_TRANSIT: "bg-indigo-100 text-indigo-700",
-  AT_DESTINATION: "bg-purple-100 text-purple-700",
-  OUT_FOR_DELIVERY: "bg-amber-100 text-amber-800",
-  DELIVERED: "bg-emerald-100 text-emerald-700",
-  UNDELIVERED: "bg-red-100 text-red-700",
+  BOOKED: "bg-slate-100 text-slate-600",
+  DISPATCHED: "bg-sky-50 text-sky-700",
+  IN_TRANSIT: "bg-brand-50 text-brand-700",
+  AT_DESTINATION: "bg-violet-50 text-violet-700",
+  OUT_FOR_DELIVERY: "bg-amber-50 text-amber-700",
+  DELIVERED: "bg-emerald-50 text-emerald-700",
+  UNDELIVERED: "bg-rose-50 text-rose-700",
 };
 const FLOW = ["BOOKED", "DISPATCHED", "IN_TRANSIT", "AT_DESTINATION", "OUT_FOR_DELIVERY", "DELIVERED"];
 const money = (n: any) => "₹" + Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -83,7 +83,7 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
             <div key={s} className="flex-1 flex items-center last:flex-none">
               <div className="flex flex-col items-center">
                 <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${
-                  i <= reached ? "bg-blue-600 border-blue-600 text-white" : "bg-white border-slate-300 text-slate-400"}`}>
+                  i <= reached ? "bg-gradient-to-b from-brand-500 to-brand-600 border-brand-600 text-white shadow-[0_4px_10px_-2px_rgb(108_74_236/0.5)]" : "bg-white border-slate-200 text-slate-400"}`}>
                   {i < reached ? "✓" : i + 1}
                 </div>
                 <div className={`text-[10px] mt-1 text-center ${i <= reached ? "text-slate-800 font-semibold" : "text-slate-400"}`}>
@@ -91,7 +91,7 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
                 </div>
               </div>
               {i < FLOW.length - 1 && (
-                <div className={`flex-1 h-0.5 mx-1 ${i < reached ? "bg-blue-600" : "bg-slate-200"}`} style={{ minWidth: 12 }} />
+                <div className={`flex-1 h-0.5 mx-1 ${i < reached ? "bg-brand-500" : "bg-slate-200"}`} style={{ minWidth: 12 }} />
               )}
             </div>
           ))}

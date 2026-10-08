@@ -68,13 +68,13 @@ export function VendorsClient({ role }: { role: string }) {
           </tr></thead>
           <tbody>
             {rows.map((v) => (
-              <tr key={v.id} className="hover:bg-slate-50">
+              <tr key={v.id} className="transition-colors hover:bg-brand-50/40">
                 <td className="td font-mono text-xs">{v.code}</td>
                 <td className="td font-medium">{v.name}</td>
                 <td className="td">{v.company || "—"}</td>
                 <td className="td">{v.mobile || "—"}</td>
                 <td className="td">{v.city || "—"}</td>
-                <td className="td"><span className={`badge ${v.status === "ACTIVE" ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}>{v.status}</span></td>
+                <td className="td"><span className={`badge ${v.status === "ACTIVE" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>{v.status}</span></td>
                 <td className="td text-right whitespace-nowrap">
                   <button className="text-blue-600 text-sm mr-2" onClick={() => setProfile(v)}>Profile</button>
                   {canEdit && <button className="text-slate-600 text-sm mr-2" onClick={() => setEditing(v)}>Edit</button>}

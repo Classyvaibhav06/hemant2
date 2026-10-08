@@ -69,9 +69,9 @@ export function CustomersClient({ role }: { role: string }) {
           </tr></thead>
           <tbody>
             {rows.map((c) => (
-              <tr key={c.id} className="hover:bg-slate-50">
+              <tr key={c.id} className="transition-colors hover:bg-brand-50/40">
                 <td className="td font-mono text-xs">{c.code}</td>
-                <td className="td font-medium">{c.name}</td>
+                <td className="td font-semibold text-slate-800">{c.name}</td>
                 <td className="td">{c.company || "—"}</td>
                 <td className="td">{c.mobile || "—"}</td>
                 <td className="td">{c.city || "—"}</td>
@@ -206,14 +206,18 @@ function LedgerTable({ rows }: { rows: any[] }) {
 
 export function Modal({ title, children, onClose, wide }: { title: string; children: React.ReactNode; onClose: () => void; wide?: boolean }) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50" onClick={onClose}>
-      <div className={`bg-white rounded-xl shadow-xl w-full ${wide ? "max-w-4xl" : "max-w-2xl"} max-h-[90vh] overflow-y-auto p-6`}
-        onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold">{title}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-700 text-xl">✕</button>
+    <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className={`animate-pop max-h-[90vh] w-full overflow-y-auto rounded-2xl bg-white shadow-lift ${wide ? "max-w-4xl" : "max-w-2xl"}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur">
+          <h2 className="text-base font-bold tracking-tight text-slate-800">{title}</h2>
+          <button onClick={onClose} aria-label="Close" className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+          </button>
         </div>
-        {children}
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );

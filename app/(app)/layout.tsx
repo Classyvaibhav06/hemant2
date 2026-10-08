@@ -1,22 +1,36 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getSessionUser, can } from "@/lib/types";
 import type { Action } from "@/lib/types";
-import { db } from "@/lib/db";
-import { LogoutButton } from "@/components/LogoutButton";
-import { MobileSidebar } from "@/components/MobileSidebar";
+import { SidebarNav, initials } from "@/components/SidebarNav";
+import { MobileNav } from "@/components/MobileNav";
+import { IconLogo } from "@/components/icons";
 
-const NAV: { href: string; label: string; action?: Action; icon: string }[] = [
-  { href: "/", label: "Dashboard", icon: "▤" },
-  { href: "/bilty/new", label: "New Bilty", action: "add", icon: "＋" },
-  { href: "/bilty", label: "Bilties", icon: "❐" },
-  { href: "/dispatch", label: "Dispatch", action: "dispatch", icon: "→" },
-  { href: "/track", label: "Tracking", action: "track", icon: "◉" },
-  { href: "/customers", label: "Customers", icon: "👤" },
-  { href: "/vendors", label: "Vendors", icon: "🚛" },
-  { href: "/rates", label: "Rate Master", action: "edit", icon: "₹" },
-  { href: "/audit", label: "Audit Log", action: "reports", icon: "🕘" },
+type NavItemDef = { href: string; label: string; action?: Action; icon: string };
+
+const NAV_GROUPS: { title: string; items: NavItemDef[] }[] = [
+  {
+    title: "Operations",
+    items: [
+      { href: "/", label: "Dashboard", icon: "home" },
+      { href: "/bilty/new", label: "New Bilty", action: "add", icon: "plusCircle" },
+      { href: "/bilty", label: "Bilties", icon: "box" },
+      { href: "/dispatch", label: "Dispatch", action: "dispatch", icon: "send" },
+      { href: "/track", label: "Tracking", action: "track", icon: "radar" },
+    ],
+  },
+  {
+    title: "Partners & Rates",
+    items: [
+      { href: "/customers", label: "Customers", icon: "users" },
+      { href: "/vendors", label: "Vendors", icon: "truck" },
+      { href: "/rates", label: "Rate Master", action: "edit", icon: "tag" },
+    ],
+  },
+  {
+    title: "Administration",
+    items: [{ href: "/audit", label: "Audit Log", action: "reports", icon: "clock" }],
+  },
 ];
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -25,52 +39,22 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!user) redirect("/login");
 
   // Filter nav items by role
-  const visibleNav = NAV.filter((item) => !item.action || can(user.role, item.action));
+  const visibleGroups = NAV_GROUPS.map((g) => ({
+    title: g.title,
+    items: g.items
+      .filter((item) => !item.action || can(user.role, item.action))
+      .map(({ href, label, icon }) => ({ href, label, icon })),
+  }));
 
   return (
-    <div className="min-h-screen flex">
-      {/* ── Desktop sidebar (hidden on mobile) ── */}
-      <aside className="hidden md:flex w-56 shrink-0 bg-slate-900 text-slate-300 flex-col">
-        <div className="px-4 py-5 border-b border-slate-800">
-          <div className="text-lg font-bold text-white flex items-center gap-2">
-            <span className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white text-sm">F</span>
-            FreightDesk
-          </div>
-          <div className="text-xs text-slate-500 mt-1">Transport Management</div>
-        </div>
-        <nav className="flex-1 py-3 overflow-y-auto">
-          {visibleNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-800 hover:text-white transition"
-            >
-              <span className="w-5 text-center opacity-70">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="px-4 py-3 border-t border-slate-800 text-xs">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-semibold text-white">{user.name}</div>
-              <div className="text-slate-500">{user.role.replaceAll("_", " ")}</div>
-            </div>
-            <LogoutButton />
-          </div>
-        </div>
-      </aside>
+    <div className="min-h-screen bg-slate-50/80">
+      <SidebarNav groups={visibleGroups} user={user} />
 
-      {/* ── Mobile sidebar (client component with drawer) ── */}
-      <MobileSidebar
-        nav={visibleNav}
-        userName={user.name}
-        userRole={user.role}
-      />
+      <MobileNav groups={visibleGroups} user={user} />
 
-      {/* ── Main content ── */}
-      <main className="flex-1 min-w-0 p-4 md:p-6 overflow-x-hidden pt-14 md:pt-6">
-        {children}
+      {/* Main content */}
+      <main className="md:pl-64">
+        <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 pb-12 md:px-8 md:pt-8 md:pb-12">{children}</div>
       </main>
     </div>
   );
