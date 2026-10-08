@@ -64,12 +64,12 @@ export function RatesClient({ role }: { role: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Rate Master</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Rate Master</h1>
           <p className="text-sm text-slate-500">Editing a rate keeps history — old bilties keep their original rate.</p>
         </div>
-        {canEdit && <button className="btn-primary" onClick={() => setEditing({} as R)}>+ Add Rate</button>}
+        {canEdit && <button className="btn-primary shrink-0" onClick={() => setEditing({} as R)}>+ Add Rate</button>}
       </div>
 
       <div className="card overflow-x-auto">

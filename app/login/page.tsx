@@ -35,8 +35,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
+      <div className="bg-white shadow-lg rounded-xl p-6 sm:p-8 w-full max-w-md">
         <div className="flex flex-col items-center mb-6">
           <div className="h-14 w-14 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold mb-2">F</div>
           <h1 className="text-2xl font-bold text-slate-800">FreightDesk</h1>

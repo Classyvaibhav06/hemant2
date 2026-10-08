@@ -27,13 +27,13 @@ export function TrackingClient({ role }: { role: string }) {
   }
 
   return (
-    <div className="space-y-4 max-w-3xl">
-      <h1 className="text-2xl font-bold">Tracking</h1>
+    <div className="space-y-4">
+      <h1 className="text-xl sm:text-2xl font-bold">Tracking</h1>
       <div className="card-p">
-        <div className="flex gap-2">
-          <input className="input w-72 font-mono" placeholder="Enter Bilty Number"
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input className="input font-mono" placeholder="Enter Bilty Number"
             value={no} onChange={(e) => setNo(e.target.value)} onKeyDown={(e) => e.key === "Enter" && track()} />
-          <button className="btn-primary" onClick={track}>Track</button>
+          <button className="btn-primary shrink-0" onClick={track}>Track</button>
         </div>
         {err && <div className="text-sm text-red-600 mt-2">{err}</div>}
       </div>
@@ -43,7 +43,7 @@ export function TrackingClient({ role }: { role: string }) {
         return (
           <>
             <div className="card-p">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                 <div>
                   <div className="font-mono font-bold text-lg">{b.bilty_no}</div>
                   <div className="text-sm text-slate-500">{b.from_city} → {b.to_city} · {b.parcel_count} parcel(s) · {b.chargeable_weight} kg</div>

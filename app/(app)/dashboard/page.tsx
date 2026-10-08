@@ -60,9 +60,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
           <p className="text-sm text-slate-500">{new Date().toDateString()} · {user.name}</p>
         </div>
         <div className="flex gap-2">
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Counters */}
-      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-3">
         {[
           ["Today's Bookings", todayBilties, "blue"],
           ["Today's Parcels", todayParcels, "blue"],
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Trends + alerts */}
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="card-p lg:col-span-2">
           <h2 className="font-semibold mb-3">Last 7 days — bookings, revenue vs cost</h2>
           <TrendChart rows={trendRows} />

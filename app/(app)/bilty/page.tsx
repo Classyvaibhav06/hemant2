@@ -27,18 +27,20 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Bilties</h1>
-        <form className="flex gap-2" action="/bilty">
-          <input name="q" defaultValue={sp.q} className="input w-64" placeholder="Search bilty no / customer / receiver" />
-          <select name="status" defaultValue={sp.status || ""} className="input w-40">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Bilties</h1>
+        <form className="flex flex-col sm:flex-row gap-2" action="/bilty">
+          <input name="q" defaultValue={sp.q} className="input w-full sm:w-64" placeholder="Search bilty / customer / receiver" />
+          <select name="status" defaultValue={sp.status || ""} className="input w-full sm:w-40">
             <option value="">All statuses</option>
             {["BOOKED", "DISPATCHED", "IN_TRANSIT", "AT_DESTINATION", "OUT_FOR_DELIVERY", "DELIVERED", "UNDELIVERED"].map((s) => <option key={s}>{s}</option>)}
           </select>
-          <button className="btn-secondary">Search</button>
+          <button className="btn-secondary w-full sm:w-auto">Search</button>
         </form>
       </div>
-      <div className="card overflow-x-auto">
+
+      {/* Desktop table */}
+      <div className="card overflow-x-auto hidden sm:block">
         <table className="w-full">
           <thead><tr>
             <th className="th">Bilty No</th><th className="th">Date</th><th className="th">Customer</th><th className="th">From → To</th>
@@ -60,6 +62,25 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
             {rows.length === 0 && <tr><td className="td text-slate-400" colSpan={8}>No bilties found</td></tr>}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile card list */}
+      <div className="sm:hidden space-y-3">
+        {rows.length === 0 && <div className="card-p text-slate-400 text-sm text-center">No bilties found</div>}
+        {rows.map((b) => (
+          <Link key={b.id} href={`/bilty/${b.bilty_no}`} className="card-p block hover:bg-slate-50 active:bg-slate-100 transition">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <span className="font-mono text-blue-600 font-semibold text-sm">{b.bilty_no}</span>
+              <span className={`badge ${STATUS_TONE[b.status]} shrink-0`}>{b.status.replaceAll("_", " ")}</span>
+            </div>
+            <div className="text-sm font-medium text-slate-800">{b.receiver_name}</div>
+            <div className="text-xs text-slate-500 mt-0.5">{b.customer_name} · {b.from_city} → {b.to_city}</div>
+            <div className="flex items-center justify-between mt-2 text-xs text-slate-500">
+              <span>{b.booking_date}</span>
+              <span className="font-semibold text-slate-700">₹{b.total_charges} · {b.parcel_count} pcs</span>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );

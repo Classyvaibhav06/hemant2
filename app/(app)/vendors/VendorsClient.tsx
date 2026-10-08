@@ -51,10 +51,10 @@ export function VendorsClient({ role }: { role: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Vendors</h1>
-        <div className="flex gap-2">
-          <input className="input w-64" placeholder="Search"
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Vendors</h1>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input className="input w-full sm:w-64" placeholder="Search"
             value={q} onChange={(e) => { setQ(e.target.value); load(e.target.value); }} />
           {canEdit && <button className="btn-primary" onClick={() => setEditing({})}>+ Add Vendor</button>}
         </div>

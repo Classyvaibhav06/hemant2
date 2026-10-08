@@ -49,17 +49,17 @@ export function DispatchClient({ role }: { role: string }) {
   }
 
   return (
-    <div className="space-y-4 max-w-4xl">
-      <h1 className="text-2xl font-bold">Dispatch</h1>
+    <div className="space-y-4">
+      <h1 className="text-xl sm:text-2xl font-bold">Dispatch</h1>
 
       {!canDispatch && <div className="card-p text-amber-700 bg-amber-50 border border-amber-200 text-sm">Your role can view dispatches but not create them.</div>}
 
       <div className="card-p">
         <h2 className="font-semibold mb-3">1. Find Bilty</h2>
-        <div className="flex gap-2">
-          <input className="input w-72 font-mono" placeholder="e.g. 202610-00001"
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input className="input font-mono" placeholder="e.g. 202610-00001"
             value={biltyNo} onChange={(e) => setBiltyNo(e.target.value)} onKeyDown={(e) => e.key === "Enter" && find()} />
-          <button className="btn-primary" onClick={find}>Load Bilty</button>
+          <button className="btn-primary shrink-0" onClick={find}>Load Bilty</button>
         </div>
         {lookupErr && <div className="text-sm text-red-600 mt-2">{lookupErr}</div>}
       </div>
@@ -92,7 +92,7 @@ export function DispatchClient({ role }: { role: string }) {
               <Inp label="Dispatch Branch" value={form.dispatch_branch} onChange={(v) => setForm({ ...form, dispatch_branch: v })} />
               <Inp label="Remarks" value={form.remarks} onChange={(v) => setForm({ ...form, remarks: v })} className="md:col-span-3" />
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="flex flex-wrap gap-2 mt-4">
               <button className="btn-primary" disabled={saving} onClick={() => dispatchBilty(false)}>
                 {saving ? "Dispatching…" : "Dispatch Bilty"}
               </button>

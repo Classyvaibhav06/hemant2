@@ -94,13 +94,13 @@ export function BiltyNewClient() {
   }
 
   return (
-    <div className="space-y-4 max-w-5xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">New Bilty / Booking</h1>
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <h1 className="text-xl sm:text-2xl font-bold">New Bilty / Booking</h1>
         <div className="text-xs text-slate-500">Bilty number is auto-generated on save</div>
       </div>
 
-      <div className="card-p grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="card-p grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div>
           <label className="label">Customer *</label>
           <select className="input" value={form.customer_id} onChange={(e) => set("customer_id", e.target.value)}>
@@ -125,7 +125,7 @@ export function BiltyNewClient() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
           <div className="card-p">
             <h2 className="font-semibold mb-3">Sender</h2>
@@ -190,7 +190,7 @@ export function BiltyNewClient() {
 
         {/* Live calculation panel */}
         <div className="space-y-4">
-          <div className="card-p sticky top-4">
+          <div className="card-p lg:sticky lg:top-4">
             <h2 className="font-semibold mb-3">Live Calculation</h2>
             {quoteErr && <div className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">{quoteErr}</div>}
             {!quote && !quoteErr && <div className="text-sm text-slate-400">Select vendor and enter chargeable weight to auto-load rates.</div>}

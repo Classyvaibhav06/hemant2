@@ -12,7 +12,7 @@ export default async function AuditPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Audit Log</h1>
+      <h1 className="text-xl sm:text-2xl font-bold">Audit Log</h1>
       <div className="card overflow-x-auto">
         <table className="w-full">
           <thead><tr>
