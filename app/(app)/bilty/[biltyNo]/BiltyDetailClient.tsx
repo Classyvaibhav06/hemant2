@@ -6,12 +6,12 @@ import { Printer, Check, ArrowRight, Warning, Package, User, Clock, FileText, Cu
 
 const STATUS_TONE: Record<string, { bg: string; text: string; border: string; dot: string }> = {
   BOOKED: { bg: "bg-zinc-800/80", text: "text-zinc-300", border: "border-zinc-700/60", dot: "bg-zinc-400" },
-  DISPATCHED: { bg: "bg-sky-500/10", text: "text-sky-400", border: "border-sky-500/20", dot: "bg-sky-400" },
+  DISPATCHED: { bg: "bg-white/[0.06]", text: "text-white", border: "border-white/20", dot: "bg-white" },
   IN_TRANSIT: { bg: "bg-accent-500/10", text: "text-accent-400", border: "border-accent-500/20", dot: "bg-accent-400" },
   AT_DESTINATION: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20", dot: "bg-purple-400" },
   OUT_FOR_DELIVERY: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", dot: "bg-amber-400" },
-  DELIVERED: { bg: "bg-[#00ba7c]/10", text: "text-[#00ba7c]", border: "border-[#00ba7c]/20", dot: "bg-[#00ba7c]" },
-  UNDELIVERED: { bg: "bg-[#f4212e]/10", text: "text-[#f4212e]", border: "border-[#f4212e]/20", dot: "bg-[#f4212e]" },
+  DELIVERED: { bg: "bg-[#00e08c]/10", text: "text-[#00e08c]", border: "border-[#00e08c]/20", dot: "bg-[#00e08c]" },
+  UNDELIVERED: { bg: "bg-[#ff3355]/10", text: "text-[#ff3355]", border: "border-[#ff3355]/20", dot: "bg-[#ff3355]" },
 };
 
 const FLOW = ["BOOKED", "DISPATCHED", "IN_TRANSIT", "AT_DESTINATION", "OUT_FOR_DELIVERY", "DELIVERED"];
@@ -44,8 +44,8 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
     load();
   }
 
-  if (err) return <div className="card-p text-[#f4212e] border border-[#f4212e]/20 bg-[#f4212e]/10">{err}</div>;
-  if (!data) return <div className="text-[#71767b] py-12 text-center text-sm">Loading consignment details…</div>;
+  if (err) return <div className="card-p text-[#ff3355] border border-[#ff3355]/20 bg-[#ff3355]/10">{err}</div>;
+  if (!data) return <div className="text-[#a3a3a3] py-12 text-center text-sm">Loading consignment details…</div>;
 
   const b = data.bilty;
   const tone = STATUS_TONE[b.status] || STATUS_TONE.BOOKED;
@@ -62,16 +62,16 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
       <div className="card-p animate-fade-up flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-[#e7e9ea]">{b.bilty_no}</h1>
+            <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-[#ededed]">{b.bilty_no}</h1>
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${tone.bg} ${tone.text} ${tone.border}`}>
               <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
               {b.status.replaceAll("_", " ")}
             </span>
           </div>
-          <div className="text-xs text-[#71767b] mt-1.5 flex flex-wrap items-center gap-2">
+          <div className="text-xs text-[#a3a3a3] mt-1.5 flex flex-wrap items-center gap-2">
             <span className="font-mono">{b.booking_date}</span>
             <span>·</span>
-            <span className="text-[#e7e9ea] font-medium">{b.customer_name}</span>
+            <span className="text-[#ededed] font-medium">{b.customer_name}</span>
             <span>·</span>
             <span className="text-zinc-300">{b.from_city} → {b.to_city}</span>
           </div>
@@ -107,17 +107,17 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
                   <div
                     className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                       isCompleted
-                        ? "bg-accent-500 text-white shadow-[0_0_10px_rgba(29,155,240,0.5)]"
+                        ? "bg-accent-500 text-black shadow-[0_0_0_1px_#ff4d00]"
                         : isCurrent
-                        ? "bg-[#121214] border-2 border-accent-400 text-accent-400 shadow-[0_0_12px_rgba(29,155,240,0.4)]"
-                        : "bg-white/[0.04] border border-white/[0.1] text-[#71767b]"
+                        ? "bg-[#0a0a0a] border-2 border-accent-400 text-accent-400 shadow-[0_0_0_1px_#ff4d00]"
+                        : "bg-white/[0.04] border border-white/[0.1] text-[#a3a3a3]"
                     }`}
                   >
                     {isCompleted ? <Check size={14} weight="bold" /> : i + 1}
                   </div>
                   <div
                     className={`text-[10px] mt-1.5 text-center whitespace-nowrap font-medium ${
-                      isCurrent ? "text-accent-400 font-bold" : isCompleted ? "text-[#e7e9ea]" : "text-[#71767b]"
+                      isCurrent ? "text-accent-400 font-bold" : isCompleted ? "text-[#ededed]" : "text-[#a3a3a3]"
                     }`}
                   >
                     {s.replaceAll("_", " ")}
@@ -136,7 +136,7 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
           })}
         </div>
         {b.status === "UNDELIVERED" && (
-          <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#f4212e]/20 bg-[#f4212e]/10 px-3.5 py-2 text-xs font-semibold text-[#f4212e]">
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#ff3355]/20 bg-[#ff3355]/10 px-3.5 py-2 text-xs font-semibold text-[#ff3355]">
             <Warning size={16} weight="fill" />
             Delivery attempt failed — consignment marked undelivered
           </div>
@@ -152,7 +152,7 @@ export function BiltyDetailClient({ biltyNo, role }: { biltyNo: string; role: st
             className={`px-4 py-2.5 text-xs font-semibold -mb-px border-b-2 whitespace-nowrap transition-colors ${
               tab === id
                 ? "border-accent-500 text-accent-400"
-                : "border-transparent text-[#71767b] hover:text-[#e7e9ea]"
+                : "border-transparent text-[#a3a3a3] hover:text-[#ededed]"
             }`}
           >
             {label}
@@ -177,7 +177,7 @@ function Overview({ b }: { b: any }) {
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <div className="card-p">
-        <h3 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Party Information</h3>
+        <h3 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Party Information</h3>
         <KV k="Customer" v={`${b.customer_name} (${b.customer_code})`} />
         <KV k="Vendor / Transporter" v={`${b.vendor_name} (${b.vendor_code})`} />
         <KV k="Sender" v={`${b.sender_name}${b.sender_mobile ? " · " + b.sender_mobile : ""}`} />
@@ -185,7 +185,7 @@ function Overview({ b }: { b: any }) {
         <KV k="Transit Corridor" v={`${b.from_city} → ${b.to_city}`} />
       </div>
       <div className="card-p">
-        <h3 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Financial Settlement</h3>
+        <h3 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Financial Settlement</h3>
         <KV k="Base Customer Freight" v={money(b.customer_amount)} />
         <KV k="Loading / Unloading / Other" v={`${money(b.loading_charge)} / ${money(b.unloading_charge)} / ${money(b.other_charges)}`} />
         <KV k="Discount Deducted" v={money(b.discount)} />
@@ -221,7 +221,7 @@ function BookingTab({ b }: { b: any }) {
 }
 
 function DispatchTab({ dispatch }: { dispatch: any }) {
-  if (!dispatch) return <div className="card-p text-[#71767b] text-xs py-8 text-center">Consignment has not been dispatched yet.</div>;
+  if (!dispatch) return <div className="card-p text-[#a3a3a3] text-xs py-8 text-center">Consignment has not been dispatched yet.</div>;
   return (
     <div className="card-p grid md:grid-cols-3 gap-x-6 gap-y-1">
       <KV k="Dispatch Date" v={dispatch.dispatch_date} />
@@ -239,7 +239,7 @@ function DispatchTab({ dispatch }: { dispatch: any }) {
 function TrackingTab({ history }: { history: any[] }) {
   return (
     <div className="card-p">
-      <h3 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-4">Milestone Log</h3>
+      <h3 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-4">Milestone Log</h3>
       <div className="relative pl-1">
         {history.map((h, i) => {
           const isLatest = i === history.length - 1;
@@ -253,7 +253,7 @@ function TrackingTab({ history }: { history: any[] }) {
                 {isLatest ? (
                   <span className="relative flex h-3.5 w-3.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-accent-500 shadow-[0_0_10px_#1d9bf0]" />
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-accent-500 shadow-[0_0_10px_#ff4d00]" />
                   </span>
                 ) : (
                   <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -261,11 +261,11 @@ function TrackingTab({ history }: { history: any[] }) {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs font-bold ${isLatest ? "text-[#e7e9ea]" : "text-[#71767b]"}`}>
+                  <span className={`text-xs font-bold ${isLatest ? "text-[#ededed]" : "text-[#a3a3a3]"}`}>
                     {h.status.replaceAll("_", " ")}
                   </span>
                 </div>
-                <div className="mt-0.5 font-mono text-[11px] text-[#71767b]">
+                <div className="mt-0.5 font-mono text-[11px] text-[#a3a3a3]">
                   {new Date(h.at).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "medium" })}
                   {" · "}
                   <span className="text-[#a3a3a3]">by {h.by}</span>
@@ -275,7 +275,7 @@ function TrackingTab({ history }: { history: any[] }) {
             </div>
           );
         })}
-        {history.length === 0 && <div className="text-[#71767b] text-xs py-4">No tracking history recorded</div>}
+        {history.length === 0 && <div className="text-[#a3a3a3] text-xs py-4">No tracking history recorded</div>}
       </div>
     </div>
   );
@@ -285,7 +285,7 @@ function LedgerTab({ b }: { b: any }) {
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <div className="card-p">
-        <h3 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Customer Ledger Entry</h3>
+        <h3 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Customer Ledger Entry</h3>
         <table className="w-full text-xs text-left">
           <thead>
             <tr>
@@ -296,7 +296,7 @@ function LedgerTab({ b }: { b: any }) {
           <tbody className="divide-y divide-white/[0.05]">
             <tr>
               <td className="td">Bilty {b.bilty_no} ({b.from_city} → {b.to_city})</td>
-              <td className="td text-right font-mono font-bold text-[#f4212e]">{money(b.total_charges)}</td>
+              <td className="td text-right font-mono font-bold text-[#ff3355]">{money(b.total_charges)}</td>
             </tr>
           </tbody>
         </table>
@@ -305,7 +305,7 @@ function LedgerTab({ b }: { b: any }) {
         </Link>
       </div>
       <div className="card-p">
-        <h3 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Vendor Ledger Entry</h3>
+        <h3 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Vendor Ledger Entry</h3>
         <table className="w-full text-xs text-left">
           <thead>
             <tr>
@@ -316,7 +316,7 @@ function LedgerTab({ b }: { b: any }) {
           <tbody className="divide-y divide-white/[0.05]">
             <tr>
               <td className="td">Bilty {b.bilty_no} vendor cost</td>
-              <td className="td text-right font-mono font-bold text-[#00ba7c]">{money(b.vendor_cost)}</td>
+              <td className="td text-right font-mono font-bold text-[#00e08c]">{money(b.vendor_cost)}</td>
             </tr>
           </tbody>
         </table>
@@ -331,11 +331,11 @@ function LedgerTab({ b }: { b: any }) {
 function PaymentsTab({ b }: { b: any }) {
   return (
     <div className="card-p">
-      <h3 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Settlement Status</h3>
+      <h3 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Settlement Status</h3>
       <KV k="Payment Mode" v={b.payment_mode || "—"} />
       <KV k="COD Amount" v={money(b.cod_amount)} />
       <KV k="Total Customer Charge" v={money(b.total_charges)} bold />
-      <p className="text-[11px] text-[#71767b] mt-3">Payment receipts against bilties are balanced directly from the customer accounts ledger.</p>
+      <p className="text-[11px] text-[#a3a3a3] mt-3">Payment receipts against bilties are balanced directly from the customer accounts ledger.</p>
     </div>
   );
 }
@@ -355,14 +355,14 @@ function AuditTab({ rows }: { rows: any[] }) {
         <tbody className="divide-y divide-white/[0.05]">
           {rows.map((a) => (
             <tr key={a.id} className="hover:bg-white/[0.02]">
-              <td className="td font-mono text-xs text-[#71767b]">{new Date(a.at).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "medium" })}</td>
-              <td className="td text-xs font-semibold text-[#e7e9ea]">{a.username}</td>
+              <td className="td font-mono text-xs text-[#a3a3a3]">{new Date(a.at).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "medium" })}</td>
+              <td className="td text-xs font-semibold text-[#ededed]">{a.username}</td>
               <td className="td font-mono text-xs text-accent-400">{a.action}</td>
-              <td className="td text-xs text-[#71767b] font-mono">{a.details || "—"}</td>
+              <td className="td text-xs text-[#a3a3a3] font-mono">{a.details || "—"}</td>
             </tr>
           ))}
           {rows.length === 0 && (
-            <tr><td className="td text-[#71767b] text-center py-6" colSpan={4}>No audit entries recorded</td></tr>
+            <tr><td className="td text-[#a3a3a3] text-center py-6" colSpan={4}>No audit entries recorded</td></tr>
           )}
         </tbody>
       </table>
@@ -373,11 +373,11 @@ function AuditTab({ rows }: { rows: any[] }) {
 function KV({ k, v, bold, highlight }: { k: string; v: string; bold?: boolean; highlight?: "blue" | "green" }) {
   return (
     <div className={`flex justify-between py-1.5 text-xs border-b border-white/[0.05] ${bold ? "font-semibold" : ""}`}>
-      <span className="text-[#71767b]">{k}</span>
+      <span className="text-[#a3a3a3]">{k}</span>
       <span className={`text-right font-mono ${
         highlight === "blue" ? "text-accent-400 font-bold" :
-        highlight === "green" ? "text-[#00ba7c] font-bold" :
-        "text-[#e7e9ea]"
+        highlight === "green" ? "text-[#00e08c] font-bold" :
+        "text-[#ededed]"
       }`}>
         {v}
       </span>

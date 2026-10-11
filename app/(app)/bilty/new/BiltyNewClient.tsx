@@ -78,15 +78,15 @@ export function BiltyNewClient() {
   if (saved) {
     return (
       <div className="card-p mx-auto max-w-lg animate-fade-up space-y-5 text-center my-6">
-        <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#00ba7c]/15 text-[#00ba7c] shadow-[0_0_20px_rgba(0,186,124,0.3)]">
+        <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#00e08c]/15 text-[#00e08c] shadow-[0_0_20px_rgba(0,186,124,0.3)]">
           <CheckCircle size={36} weight="fill" />
         </span>
-        <h1 className="text-2xl font-bold tracking-tight text-[#e7e9ea]">Bilty {saved.bilty_no} Created</h1>
+        <h1 className="font-display text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">Bilty {saved.bilty_no} Created</h1>
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 text-xs space-y-2 text-left">
-          <div className="flex justify-between"><span className="text-[#71767b]">Status:</span> <span className="font-bold text-[#00ba7c]">{saved.status}</span></div>
-          <div className="flex justify-between"><span className="text-[#71767b]">Customer Charges:</span> <span className="font-mono font-bold text-[#e7e9ea]">{money(saved.total_charges)}</span></div>
-          <div className="flex justify-between"><span className="text-[#71767b]">Vendor Cost:</span> <span className="font-mono text-[#71767b]">{money(saved.vendor_cost)}</span></div>
-          <div className="flex justify-between border-t border-white/[0.06] pt-1.5"><span className="text-[#71767b]">Gross Margin:</span> <span className="font-mono font-bold text-accent-400">{money(saved.gross_margin)}</span></div>
+          <div className="flex justify-between"><span className="text-[#a3a3a3]">Status:</span> <span className="font-bold text-[#00e08c]">{saved.status}</span></div>
+          <div className="flex justify-between"><span className="text-[#a3a3a3]">Customer Charges:</span> <span className="font-mono font-bold text-[#ededed]">{money(saved.total_charges)}</span></div>
+          <div className="flex justify-between"><span className="text-[#a3a3a3]">Vendor Cost:</span> <span className="font-mono text-[#a3a3a3]">{money(saved.vendor_cost)}</span></div>
+          <div className="flex justify-between border-t border-white/[0.06] pt-1.5"><span className="text-[#a3a3a3]">Gross Margin:</span> <span className="font-mono font-bold text-accent-400">{money(saved.gross_margin)}</span></div>
         </div>
         <div className="flex justify-center gap-3">
           <a className="btn-secondary text-xs" href={`/bilty/${saved.bilty_no}`}>Open Bilty</a>
@@ -102,11 +102,11 @@ export function BiltyNewClient() {
         <div>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-accent-500 animate-pulse" />
-            <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Consignment Entry</span>
+            <span className="font-mono text-xs uppercase tracking-wider text-[#a3a3a3]">Consignment Entry</span>
           </div>
-          <h1 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-[#e7e9ea]">New Bilty Booking</h1>
+          <h1 className="font-display mt-1 text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">New Bilty Booking</h1>
         </div>
-        <div className="font-mono text-xs text-[#71767b]">Auto-generated BLT sequence on submission</div>
+        <div className="font-mono text-xs text-[#a3a3a3]">Auto-generated BLT sequence on submission</div>
       </div>
 
       <div className="card-p animate-fade-up grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3">
@@ -137,7 +137,7 @@ export function BiltyNewClient() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 space-y-4">
           <div className="card-p">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Sender Details</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Sender Details</h2>
             <div className="grid grid-cols-2 gap-3">
               <Inp label="Sender Name *" value={form.sender_name} onChange={(v) => set("sender_name", v)} />
               <Inp label="Sender Mobile" value={form.sender_mobile} onChange={(v) => set("sender_mobile", v)} />
@@ -145,7 +145,7 @@ export function BiltyNewClient() {
             </div>
           </div>
           <div className="card-p">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Receiver Details</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Receiver Details</h2>
             <div className="grid grid-cols-2 gap-3">
               <Inp label="Receiver Name *" value={form.receiver_name} onChange={(v) => set("receiver_name", v)} />
               <Inp label="Receiver Mobile" value={form.receiver_mobile} onChange={(v) => set("receiver_mobile", v)} />
@@ -153,7 +153,7 @@ export function BiltyNewClient() {
             </div>
           </div>
           <div className="card-p">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Consignment Particulars</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Consignment Particulars</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <div>
                 <label className="label">Commodity Type</label>
@@ -181,7 +181,7 @@ export function BiltyNewClient() {
             </div>
           </div>
           <div className="card-p">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">Charges & Adjustments</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">Charges & Adjustments</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <Inp label="Base Freight (₹)" type="number" value={form.freight} onChange={(v) => set("freight", v)} />
               <Inp label="Loading Charge (₹)" type="number" value={form.loading_charge} onChange={(v) => set("loading_charge", v)} />
@@ -190,7 +190,7 @@ export function BiltyNewClient() {
               <Inp label="Discount (₹)" type="number" value={form.discount} onChange={(v) => set("discount", v)} />
               <Inp label="Remarks" value={form.remarks} onChange={(v) => set("remarks", v)} />
             </div>
-            <label className="flex items-center gap-2.5 mt-3 text-xs text-[#e7e9ea] cursor-pointer select-none">
+            <label className="flex items-center gap-2.5 mt-3 text-xs text-[#ededed] cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={form.manual_rate}
@@ -214,7 +214,7 @@ export function BiltyNewClient() {
           <div className="card-p lg:sticky lg:top-4">
             <div className="flex items-center gap-2 mb-3">
               <Calculator size={18} className="text-accent-400" />
-              <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b]">Real-Time Quote</h2>
+              <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3]">Real-Time Quote</h2>
             </div>
             {quoteErr && (
               <div className="text-xs text-[#ffd400] bg-[#ffd400]/10 border border-[#ffd400]/20 rounded-xl px-3 py-2.5 mb-3 flex items-center gap-2">
@@ -223,7 +223,7 @@ export function BiltyNewClient() {
               </div>
             )}
             {!quote && !quoteErr && (
-              <div className="text-xs text-[#71767b] py-6 text-center">
+              <div className="text-xs text-[#a3a3a3] py-6 text-center">
                 Select transporter vendor & enter chargeable weight to generate quote.
               </div>
             )}
@@ -244,14 +244,14 @@ export function BiltyNewClient() {
                 <Row l="Vendor cost" v={money(ch.vendor_cost)} bold />
                 <Row l="Gross margin" v={money(ch.gross_margin)} bold />
                 <div className={`rounded-xl px-3 py-2 font-bold flex justify-between items-center ${
-                  ch.net_amount >= 0 ? "bg-[#00ba7c]/10 text-[#00ba7c] border border-[#00ba7c]/20" : "bg-[#f4212e]/10 text-[#f4212e] border border-[#f4212e]/20"
+                  ch.net_amount >= 0 ? "bg-[#00e08c]/10 text-[#00e08c] border border-[#00e08c]/20" : "bg-[#ff3355]/10 text-[#ff3355] border border-[#ff3355]/20"
                 }`}>
                   <span>Net Estimated Margin:</span>
                   <span className="font-mono">{money(ch.net_amount)}</span>
                 </div>
               </div>
             )}
-            {error && <div className="text-xs font-semibold text-[#f4212e] mt-3">{error}</div>}
+            {error && <div className="text-xs font-semibold text-[#ff3355] mt-3">{error}</div>}
             <div className="mt-4 space-y-2">
               <button
                 className="btn-primary w-full text-xs gap-1.5"
@@ -296,11 +296,11 @@ function Inp({ label, value, onChange, type = "text", className }: { label: stri
 function Row({ l, v, bold, highlight }: { l: string; v: string; bold?: boolean; highlight?: "blue" | "green" }) {
   return (
     <div className={`flex justify-between py-0.5 ${bold ? "font-semibold" : ""}`}>
-      <span className="text-[#71767b]">{l}</span>
+      <span className="text-[#a3a3a3]">{l}</span>
       <span className={`font-mono ${
         highlight === "blue" ? "text-accent-400 font-bold" :
-        highlight === "green" ? "text-[#00ba7c] font-bold" :
-        "text-[#e7e9ea]"
+        highlight === "green" ? "text-[#00e08c] font-bold" :
+        "text-[#ededed]"
       }`}>
         {v}
       </span>

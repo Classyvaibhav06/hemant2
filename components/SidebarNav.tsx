@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   House, PlusCircle, Package, PaperPlaneTilt, Crosshair,
-  Users, Truck, Tag, Clock, SignOut, Truck as LogoIcon,
+  Users, Truck, Tag, Clock, Truck as LogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { LogoutButton } from "@/components/LogoutButton";
+import { PaletteTrigger, openPalette } from "@/components/CommandPalette";
 
 export type NavItem = { href: string; label: string; icon: string };
 export type NavGroup = { title: string; items: NavItem[] };
@@ -39,6 +41,23 @@ export function initials(name: string) {
     .toUpperCase();
 }
 
+function LiveClock() {
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <span className="font-mono text-[13px] font-bold tracking-[0.14em] text-white tabular-nums">
+      {now
+        ? now.toLocaleTimeString("en-IN", { hour12: false, timeZone: "Asia/Kolkata" })
+        : "--:--:--"}
+      <span className="ml-1 text-[9px] font-bold text-[#ff4d00]">IST</span>
+    </span>
+  );
+}
+
 export function SidebarNav({
   groups,
   user,
@@ -49,28 +68,48 @@ export function SidebarNav({
   const pathname = usePathname();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-[244px] flex-col border-r border-white/[0.07] bg-[#0a0a0a] md:flex">
-      {/* ── Brand mark ── */}
-      <div className="flex items-center gap-3 px-5 pt-6 pb-6 border-b border-white/[0.06]">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent-500 text-white">
-          <LogoIcon weight="fill" size={20} />
+    <aside className="fixed inset-y-0 left-0 z-30 hidden w-[248px] flex-col border-r border-white/[0.08] bg-black md:flex">
+      {/* ── Brand ── */}
+      <div className="flex items-center gap-3 border-b border-white/[0.08] px-5 py-5">
+        <span className="grid h-10 w-10 shrink-0 place-items-center bg-[#ff4d00] text-black">
+          <LogoIcon weight="fill" size={22} />
         </span>
         <div className="min-w-0">
-          <div className="text-[15px] font-bold tracking-tight text-[#e7e9ea] leading-tight">FreightDesk</div>
-          <div className="text-[10px] font-medium text-[#71767b] tracking-wider uppercase mt-0.5">Transport Suite</div>
+          <div className="font-display text-[20px] leading-none tracking-wide text-white uppercase">
+            Freight<span className="text-[#ff4d00]">Desk</span>
+          </div>
+          <div className="mt-1 font-mono text-[8px] tracking-[0.28em] text-[#5a5a5a] uppercase">
+            Transport OS
+          </div>
         </div>
       </div>
 
+      {/* ── Live status strip ── */}
+      <div className="flex items-center justify-between border-b border-white/[0.08] px-5 py-3">
+        <div>
+          <div className="font-mono text-[8px] tracking-[0.26em] text-[#5a5a5a] uppercase">
+            Local Time
+          </div>
+          <LiveClock />
+        </div>
+        <span className="flex items-center gap-1.5 border border-[#00e08c]/30 bg-[#00e08c]/[0.07] px-1.5 py-1 font-mono text-[8px] font-bold tracking-[0.14em] text-[#00e08c]">
+          <span className="h-1.5 w-1.5 animate-blink bg-[#00e08c]" />
+          LIVE
+        </span>
+      </div>
+
       {/* ── Navigation ── */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 no-scrollbar">
-        {groups.map((g) => {
+      <nav className="no-scrollbar flex-1 overflow-y-auto px-3 py-4">
+        {groups.map((g, gi) => {
           if (g.items.length === 0) return null;
           return (
             <div key={g.title} className="mb-6 last:mb-2">
-              <div className="mb-2 px-3 text-[10px] font-bold tracking-[0.12em] text-[#3a3a3a] uppercase select-none">
-                {g.title}
+              <div className="mb-2 flex items-baseline gap-2 px-3 font-mono text-[9px] font-bold tracking-[0.24em] text-[#4a4a4a] uppercase select-none">
+                <span className="text-[#ff4d00]">{String(gi + 1).padStart(2, "0")}</span>
+                <span className="h-px flex-1 bg-white/[0.07]" />
+                <span>{g.title}</span>
               </div>
-              <div className="space-y-0.5">
+              <div className="space-y-px">
                 {g.items.map((item) => {
                   const Icon = ICON_MAP[item.icon];
                   const active = isActive(pathname, item.href);
@@ -78,23 +117,30 @@ export function SidebarNav({
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all duration-150 ${
+                      className={`group relative flex items-center gap-3 py-2.5 pr-3 pl-4 font-mono text-[12px] font-bold tracking-[0.1em] uppercase transition-all duration-100 ${
                         active
-                          ? "bg-white/[0.07] text-[#e7e9ea] font-semibold"
-                          : "text-[#71767b] hover:bg-white/[0.04] hover:text-[#e7e9ea]"
+                          ? "bg-white/[0.06] text-white"
+                          : "text-[#7a7a7a] hover:bg-white/[0.03] hover:text-white"
                       }`}
                     >
-                      {active && (
-                        <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-accent-500" />
-                      )}
+                      <span
+                        className={`absolute top-0 bottom-0 left-0 w-[3px] transition-colors ${
+                          active ? "bg-[#ff4d00]" : "bg-transparent group-hover:bg-white/[0.12]"
+                        }`}
+                      />
                       {Icon && (
                         <Icon
-                          size={18}
+                          size={16}
                           weight={active ? "fill" : "regular"}
-                          className={active ? "text-accent-500" : "text-[#525252] group-hover:text-[#71767b] transition-colors"}
+                          className={`shrink-0 transition-colors ${
+                            active ? "text-[#ff4d00]" : "text-[#4f4f4f] group-hover:text-[#9a9a9a]"
+                          }`}
                         />
                       )}
                       <span className="truncate">{item.label}</span>
+                      {active && (
+                        <span className="ml-auto h-1.5 w-1.5 shrink-0 animate-blink bg-[#ff4d00]" />
+                      )}
                     </Link>
                   );
                 })}
@@ -104,17 +150,26 @@ export function SidebarNav({
         })}
       </nav>
 
+      {/* ── Command palette trigger ── */}
+      <div className="border-t border-white/[0.08] p-3">
+        <PaletteTrigger onClick={openPalette} />
+      </div>
+
       {/* ── User footer ── */}
-      <div className="border-t border-white/[0.06] p-3">
-        <div className="flex items-center gap-3 rounded-xl px-2 py-2.5 transition hover:bg-white/[0.04]">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-[11px] font-bold text-white">
+      <div className="border-t border-white/[0.08] p-3">
+        <div className="flex items-center gap-3 px-1 py-1.5 transition hover:bg-white/[0.03]">
+          <span className="grid h-9 w-9 shrink-0 place-items-center border border-white/[0.14] bg-white/[0.04] font-mono text-[11px] font-bold text-white">
             {initials(user.name)}
           </span>
           <div className="min-w-0 flex-1">
-            <div className="truncate text-[13px] font-semibold text-[#e7e9ea] leading-tight">{user.name}</div>
-            <div className="truncate text-[11px] text-[#71767b]">{user.role.replaceAll("_", " ")}</div>
+            <div className="truncate font-mono text-[11px] font-bold tracking-wide text-white uppercase">
+              {user.name}
+            </div>
+            <div className="truncate font-mono text-[9px] tracking-[0.14em] text-[#ff7a3c] uppercase">
+              {user.role.replaceAll("_", " ")}
+            </div>
           </div>
-          <LogoutButton className="grid h-8 w-8 cursor-pointer place-items-center rounded-lg text-[#525252] transition hover:bg-white/[0.06] hover:text-[#f4212e]" />
+          <LogoutButton className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center border border-transparent text-[#5a5a5a] transition hover:border-[#ff3355]/40 hover:bg-[#ff3355]/10 hover:text-[#ff3355]" />
         </div>
       </div>
     </aside>

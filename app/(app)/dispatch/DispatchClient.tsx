@@ -54,10 +54,10 @@ export function DispatchClient({ role }: { role: string }) {
       <div className="animate-fade-up">
         <div className="flex items-center gap-2">
           <PaperPlaneTilt size={16} className="text-accent-400" />
-          <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Outward Logistics</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-[#a3a3a3]">Outward Logistics</span>
         </div>
-        <h1 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-[#e7e9ea]">Dispatch Manifests</h1>
-        <p className="mt-0.5 text-xs text-[#71767b]">Assign vehicles, drivers, and print departure manifests</p>
+        <h1 className="font-display mt-1 text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">Dispatch Manifests</h1>
+        <p className="mt-0.5 text-xs text-[#a3a3a3]">Assign vehicles, drivers, and print departure manifests</p>
       </div>
 
       {!canDispatch && (
@@ -68,10 +68,10 @@ export function DispatchClient({ role }: { role: string }) {
       )}
 
       <div className="card-p animate-fade-up" style={{ animationDelay: "40ms" }}>
-        <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">1. Select Consignment</h2>
+        <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">1. Select Consignment</h2>
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
-            <MagnifyingGlass size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[#71767b]" />
+            <MagnifyingGlass size={16} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[#a3a3a3]" />
             <input
               className="input pl-9 font-mono text-sm tracking-wider uppercase placeholder:normal-case placeholder:font-sans"
               placeholder="Enter booked bilty number (e.g. BLT-2026-0001)"
@@ -86,7 +86,7 @@ export function DispatchClient({ role }: { role: string }) {
           </button>
         </div>
         {lookupErr && (
-          <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#f4212e]/20 bg-[#f4212e]/10 px-3.5 py-2 text-xs font-semibold text-[#f4212e]">
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#ff3355]/20 bg-[#ff3355]/10 px-3.5 py-2 text-xs font-semibold text-[#ff3355]">
             <Warning size={15} weight="fill" />
             {lookupErr}
           </div>
@@ -96,7 +96,7 @@ export function DispatchClient({ role }: { role: string }) {
       {lookup && (
         <>
           <div className="card-p animate-fade-up">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">2. Consignment Data (Auto-Verified)</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">2. Consignment Data (Auto-Verified)</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
               <Info l="Bilty No" v={lookup.bilty_no} highlight />
               <Info l="Customer" v={lookup.customer_name} />
@@ -111,7 +111,7 @@ export function DispatchClient({ role }: { role: string }) {
             </div>
           </div>
           <div className="card-p animate-fade-up">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b] mb-3">3. Vehicle & Route Assignment</h2>
+            <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3] mb-3">3. Vehicle & Route Assignment</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <Inp label="Dispatch Date *" type="date" value={form.dispatch_date} onChange={(v) => setForm({ ...form, dispatch_date: v })} />
               <Inp label="Vehicle Number *" value={form.vehicle_no} onChange={(v) => setForm({ ...form, vehicle_no: v })} placeholder="e.g. DL-01-AB-1234" />
@@ -140,17 +140,17 @@ export function DispatchClient({ role }: { role: string }) {
       )}
 
       {done && (
-        <div className="card-p animate-fade-up border border-[#00ba7c]/20 bg-[#00ba7c]/10 text-xs text-[#00ba7c] flex items-center gap-2.5">
+        <div className="card-p animate-fade-up border border-[#00e08c]/20 bg-[#00e08c]/10 text-xs text-[#00e08c] flex items-center gap-2.5">
           <CheckCircle size={18} weight="fill" className="shrink-0" />
           <span>
-            Bilty <b className="font-mono text-[#e7e9ea]">{done.bilty_no}</b> successfully dispatched · Manifest <b className="font-mono text-[#e7e9ea]">{done.manifest_no}</b> · Status updated to <b>DISPATCHED</b>
+            Bilty <b className="font-mono text-[#ededed]">{done.bilty_no}</b> successfully dispatched · Manifest <b className="font-mono text-[#ededed]">{done.manifest_no}</b> · Status updated to <b>DISPATCHED</b>
           </span>
         </div>
       )}
 
       <div className="card overflow-x-auto animate-fade-up" style={{ animationDelay: "60ms" }}>
         <div className="p-4 pb-2">
-          <h2 className="font-bold text-xs uppercase tracking-wider text-[#71767b]">Recent Vehicle Dispatches</h2>
+          <h2 className="font-bold text-xs uppercase tracking-wider text-[#a3a3a3]">Recent Vehicle Dispatches</h2>
         </div>
         <table className="w-full text-left">
           <thead>
@@ -168,16 +168,16 @@ export function DispatchClient({ role }: { role: string }) {
             {recent.map((d) => (
               <tr key={d.id} className="hover:bg-white/[0.02]">
                 <td className="td font-mono text-xs text-accent-400">{d.bilty_no}</td>
-                <td className="td font-mono text-xs text-[#71767b]">{d.dispatch_date}</td>
-                <td className="td text-xs font-semibold text-[#e7e9ea]">{d.vehicle_no}</td>
+                <td className="td font-mono text-xs text-[#a3a3a3]">{d.dispatch_date}</td>
+                <td className="td text-xs font-semibold text-[#ededed]">{d.vehicle_no}</td>
                 <td className="td text-xs text-zinc-300">{d.driver}</td>
-                <td className="td font-mono text-xs text-[#71767b]">{d.manifest_no}</td>
-                <td className="td text-xs text-[#71767b]">{d.from_city} → {d.to_city}</td>
-                <td className="td text-xs text-[#71767b]">{d.dispatched_by}</td>
+                <td className="td font-mono text-xs text-[#a3a3a3]">{d.manifest_no}</td>
+                <td className="td text-xs text-[#a3a3a3]">{d.from_city} → {d.to_city}</td>
+                <td className="td text-xs text-[#a3a3a3]">{d.dispatched_by}</td>
               </tr>
             ))}
             {recent.length === 0 && (
-              <tr><td className="td text-[#71767b] text-center py-6" colSpan={7}>No vehicle dispatches recorded</td></tr>
+              <tr><td className="td text-[#a3a3a3] text-center py-6" colSpan={7}>No vehicle dispatches recorded</td></tr>
             )}
           </tbody>
         </table>
@@ -189,8 +189,8 @@ export function DispatchClient({ role }: { role: string }) {
 function Info({ l, v, highlight }: { l: string; v: string; highlight?: boolean }) {
   return (
     <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-2.5">
-      <div className="text-[10px] font-bold uppercase tracking-wider text-[#71767b]">{l}</div>
-      <div className={`mt-0.5 font-medium ${highlight ? "font-mono font-bold text-accent-400" : "text-[#e7e9ea]"}`}>{v}</div>
+      <div className="text-[10px] font-bold uppercase tracking-wider text-[#a3a3a3]">{l}</div>
+      <div className={`mt-0.5 font-medium ${highlight ? "font-mono font-bold text-accent-400" : "text-[#ededed]"}`}>{v}</div>
     </div>
   );
 }

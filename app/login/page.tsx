@@ -1,13 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import { Warning, Lock, User, Truck } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import { Warning, Lock, User, Truck, ArrowRight, SealCheck } from "@phosphor-icons/react";
 
 const DEMO_ACCOUNTS: { label: string; desc: string; u: string; p: string; accent: boolean }[] = [
   { label: "Admin", desc: "Full access", u: "admin", p: "admin123", accent: true },
   { label: "Booking", desc: "Create bilties", u: "booking", p: "booking123", accent: false },
   { label: "Viewer", desc: "Read only", u: "viewer", p: "viewer123", accent: false },
 ];
+
+const TICKER = [
+  "BOOKINGS", "DISPATCH", "TRACKING", "FREIGHT RATES", "COD LEDGER",
+  "VENDOR NETWORK", "AUDIT TRAIL", "LIVE OPS",
+];
+
+function Ticker() {
+  const row = [...TICKER, ...TICKER];
+  return (
+    <div className="overflow-hidden border-t border-white/[0.08] py-3">
+      <div className="marquee-mask flex w-max animate-marquee gap-0">
+        {row.map((t, i) => (
+          <span
+            key={i}
+            className="flex shrink-0 items-center gap-4 pr-4 font-mono text-[10px] font-bold tracking-[0.3em] text-[#5a5a5a] uppercase"
+          >
+            {t}
+            <span className="h-1.5 w-1.5 bg-[#ff4d00]" />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LiveClock() {
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <span className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#a3a3a3] tabular-nums">
+      {now
+        ? now.toLocaleTimeString("en-IN", { hour12: false, timeZone: "Asia/Kolkata" })
+        : "--:--:--"}{" "}
+      IST
+    </span>
+  );
+}
 
 export default function LoginPage() {
   const [username, setUsername] = useState("admin");
@@ -34,105 +75,206 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative grid min-h-[100dvh] place-items-center overflow-hidden bg-[#0a0a0a] px-4 py-10">
-      {/* Background ambient glow */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute top-0 left-1/2 h-[500px] w-[600px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-accent-500/10 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-[300px] w-[400px] translate-x-1/4 translate-y-1/3 rounded-full bg-accent-700/8 blur-[100px]" />
-        {/* Grid pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgb(255 255 255) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255) 1px, transparent 1px)`,
-            backgroundSize: "64px 64px",
-          }}
-        />
+    <div className="grid min-h-[100dvh] bg-black lg:grid-cols-[1.15fr_1fr]">
+      {/* ══ LEFT: cinematic brand panel ══ */}
+      <div className="bg-grid relative hidden flex-col justify-between overflow-hidden border-r border-white/[0.08] p-10 lg:flex xl:p-14">
+        {/* ambient glows */}
+        <div className="pointer-events-none absolute -top-32 -left-32 h-[420px] w-[420px] rounded-full bg-[#ff4d00]/[0.07] blur-[130px]" />
+        <div className="pointer-events-none absolute right-0 bottom-0 h-[300px] w-[300px] rounded-full bg-[#ff4d00]/[0.05] blur-[110px]" />
+        {/* scanline */}
+        <div className="animate-scan pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-transparent via-white/[0.03] to-transparent" />
+
+        {/* top row */}
+        <div className="animate-fade-in relative flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-9 w-9 place-items-center bg-[#ff4d00] text-black">
+              <Truck weight="fill" size={20} />
+            </span>
+            <span className="font-mono text-[10px] font-bold tracking-[0.3em] text-[#a3a3a3] uppercase">
+              Freightdesk
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <LiveClock />
+            <span className="flex items-center gap-1.5 border border-[#00e08c]/30 bg-[#00e08c]/[0.07] px-2 py-1 font-mono text-[9px] font-bold tracking-[0.18em] text-[#00e08c]">
+              <span className="h-1.5 w-1.5 animate-blink bg-[#00e08c]" />
+              SYSTEMS NOMINAL
+            </span>
+          </div>
+        </div>
+
+        {/* hero type */}
+        <div className="relative">
+          <div className="animate-fade-up mb-6 flex items-center gap-3">
+            <span className="h-px w-10 bg-[#ff4d00]" />
+            <span className="font-mono text-[10px] font-bold tracking-[0.34em] text-[#8a8a8a] uppercase">
+              Transport Management System
+            </span>
+          </div>
+          <h1 className="font-display leading-[0.88] tracking-wide uppercase select-none">
+            <span className="animate-fade-up block text-[clamp(4rem,9vw,8.5rem)] text-white">
+              Move.
+            </span>
+            <span
+              className="animate-fade-up block text-[clamp(4rem,9vw,8.5rem)] text-white"
+              style={{ animationDelay: "120ms" }}
+            >
+              Track.
+            </span>
+            <span
+              className="animate-fade-up block text-[clamp(4rem,9vw,8.5rem)] text-stroke-orange"
+              style={{ animationDelay: "240ms" }}
+            >
+              Deliver.
+            </span>
+          </h1>
+          <p
+            className="animate-fade-up mt-7 max-w-md font-mono text-[12px] leading-relaxed tracking-[0.08em] text-[#8a8a8a] uppercase"
+            style={{ animationDelay: "360ms" }}
+          >
+            One terminal for bookings, dispatch, live tracking and the ledger —{" "}
+            <b className="font-bold text-white">built for speed on the ground.</b>
+          </p>
+
+          {/* stats */}
+          <div
+            className="animate-fade-up mt-10 grid max-w-md grid-cols-3 border border-white/[0.08]"
+            style={{ animationDelay: "480ms" }}
+          >
+            {[
+              ["bilty → delivered", "END TO END"],
+              ["₹ ledger", "COD & CREDIT"],
+              ["24×7", "OPS UPTIME"],
+            ].map(([v, l], i) => (
+              <div
+                key={l}
+                className={`px-4 py-4 ${i < 2 ? "border-r border-white/[0.08]" : ""}`}
+              >
+                <div className="font-display text-[22px] leading-none text-white uppercase">{v}</div>
+                <div className="mt-1.5 font-mono text-[8px] tracking-[0.22em] text-[#5a5a5a] uppercase">
+                  {l}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ticker */}
+        <div className="animate-fade-in relative" style={{ animationDelay: "400ms" }}>
+          <Ticker />
+        </div>
       </div>
 
-      <div className="animate-fade-up relative w-full max-w-[400px]">
-        {/* Card */}
-        <div className="rounded-2xl border border-white/[0.08] bg-[#111111] p-8 shadow-lift">
-          {/* Brand */}
-          <div className="mb-8 flex flex-col items-center text-center">
-            <span className="mb-4 grid h-14 w-14 place-items-center rounded-[18px] bg-accent-500 text-white shadow-glow">
-              <Truck weight="fill" size={28} />
+      {/* ══ RIGHT: auth terminal ══ */}
+      <div className="relative flex flex-col justify-center px-5 py-10 sm:px-10 lg:px-14">
+        {/* mobile brand band */}
+        <div className="mb-10 flex items-center justify-between lg:hidden">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center bg-[#ff4d00] text-black">
+              <Truck weight="fill" size={18} />
             </span>
-            <h1 className="text-[22px] font-bold tracking-tight text-[#e7e9ea]">FreightDesk</h1>
-            <p className="mt-1 text-sm text-[#71767b]">Transport Management System</p>
+            <span className="font-display text-[18px] leading-none tracking-wide text-white uppercase">
+              Freight<span className="text-[#ff4d00]">Desk</span>
+            </span>
+          </div>
+          <span className="flex items-center gap-1.5 border border-[#00e08c]/30 bg-[#00e08c]/[0.07] px-2 py-1 font-mono text-[8px] font-bold tracking-[0.16em] text-[#00e08c]">
+            <span className="h-1.5 w-1.5 animate-blink bg-[#00e08c]" />
+            ONLINE
+          </span>
+        </div>
+
+        <div className="animate-fade-up mx-auto w-full max-w-[420px]">
+          {/* panel header */}
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.26em] text-[#5a5a5a] uppercase">
+              <span className="text-[#ff4d00]">■</span> AUTH / TERMINAL 01
+            </div>
+            <span className="font-mono text-[10px] tracking-[0.2em] text-[#3a3a3a]">SECURE</span>
           </div>
 
-          <form onSubmit={submit} className="space-y-4">
+          <h2 className="font-display text-[42px] leading-[0.95] tracking-wide text-white uppercase">
+            Sign in to <span className="text-stroke">dispatch</span>
+          </h2>
+          <p className="mt-3 font-mono text-[11px] tracking-[0.12em] text-[#7a7a7a] uppercase">
+            Enter credentials to access the ops terminal
+          </p>
+
+          <form onSubmit={submit} className="mt-8 space-y-5">
             <div>
-              <label className="mb-1.5 block text-[12px] font-semibold text-[#71767b] tracking-wide uppercase">
+              <label className="label" htmlFor="username">
                 Username
               </label>
               <div className="relative">
                 <User
-                  size={16}
-                  className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#525252]"
+                  size={15}
+                  weight="bold"
+                  className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#5a5a5a]"
                 />
                 <input
-                  className="input pl-9"
+                  id="username"
+                  className="input pl-10 font-mono tracking-wide"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
                   required
-                  placeholder="Enter username"
+                  placeholder="OPERATOR ID"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-[12px] font-semibold text-[#71767b] tracking-wide uppercase">
+              <label className="label" htmlFor="password">
                 Password
               </label>
               <div className="relative">
                 <Lock
-                  size={16}
-                  className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#525252]"
+                  size={15}
+                  weight="bold"
+                  className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#5a5a5a]"
                 />
                 <input
+                  id="password"
                   type="password"
-                  className="input pl-9"
+                  className="input pl-10 font-mono tracking-wide"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required
-                  placeholder="Enter password"
+                  placeholder="••••••••••"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="flex items-center gap-2.5 rounded-xl border border-[#f4212e]/20 bg-[#f4212e]/10 px-3.5 py-2.5 text-[13px] font-medium text-[#f4212e]">
-                <Warning size={16} weight="fill" className="shrink-0" />
+              <div className="flex items-center gap-2.5 border border-[#ff3355]/30 bg-[#ff3355]/[0.08] px-3.5 py-2.5 font-mono text-[11px] font-bold tracking-[0.1em] text-[#ff3355] uppercase">
+                <Warning size={15} weight="fill" className="shrink-0" />
                 {error}
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={busy}
-              className="btn-primary w-full py-3 text-[15px] rounded-xl mt-2"
-            >
+            <button type="submit" disabled={busy} className="btn-primary w-full py-3.5 text-[12px]">
               {busy ? (
                 <span className="flex items-center gap-2">
                   <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-20" />
                     <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
                   </svg>
-                  Signing in…
+                  AUTHENTICATING…
                 </span>
               ) : (
-                "Sign in"
+                <>
+                  AUTHENTICATE
+                  <ArrowRight size={14} weight="bold" />
+                </>
               )}
             </button>
           </form>
 
-          {/* Demo accounts */}
-          <div className="mt-7 border-t border-white/[0.06] pt-5">
-            <div className="mb-3 text-center text-[10px] font-bold tracking-[0.12em] text-[#3a3a3a] uppercase">
-              Demo accounts
+          {/* demo accounts */}
+          <div className="mt-8 border-t border-white/[0.08] pt-6">
+            <div className="mb-3 flex items-center gap-2 font-mono text-[9px] font-bold tracking-[0.26em] text-[#4a4a4a] uppercase">
+              <SealCheck size={12} className="text-[#ff4d00]" weight="fill" />
+              Demo Access — one click
             </div>
             <div className="grid grid-cols-3 gap-2">
               {DEMO_ACCOUNTS.map((a) => (
@@ -144,25 +286,32 @@ export default function LoginPage() {
                     setPassword(a.p);
                     setError("");
                   }}
-                  className={`cursor-pointer rounded-xl border px-2 py-2.5 text-center transition-all duration-200 active:scale-95 ${
+                  className={`cursor-pointer border px-2 py-3 text-center transition-all duration-150 active:scale-95 ${
                     a.accent
-                      ? "border-accent-500/30 bg-accent-500/10 hover:border-accent-500/50 hover:bg-accent-500/15"
-                      : "border-white/[0.06] bg-white/[0.03] hover:border-white/[0.1] hover:bg-white/[0.06]"
+                      ? "border-[#ff4d00]/40 bg-[#ff4d00]/[0.08] hover:bg-[#ff4d00]/[0.16]"
+                      : "border-white/[0.08] bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.06]"
                   }`}
                 >
-                  <span className={`block text-[12px] font-bold ${a.accent ? "text-accent-400" : "text-[#e7e9ea]"}`}>
+                  <span
+                    className={`block font-mono text-[11px] font-bold tracking-[0.12em] uppercase ${
+                      a.accent ? "text-[#ff4d00]" : "text-white"
+                    }`}
+                  >
                     {a.label}
                   </span>
-                  <span className="mt-0.5 block text-[10px] text-[#525252]">{a.desc}</span>
+                  <span className="mt-0.5 block font-mono text-[8px] tracking-[0.1em] text-[#5a5a5a] uppercase">
+                    {a.desc}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
-        </div>
 
-        <p className="mt-5 text-center text-[11px] text-[#3a3a3a]">
-          © {new Date().getFullYear()} FreightDesk
-        </p>
+          <p className="mt-10 flex items-center justify-between font-mono text-[9px] tracking-[0.22em] text-[#3a3a3a] uppercase">
+            <span>© {new Date().getFullYear()} Freightdesk</span>
+            <span>v2.0 — Blackline</span>
+          </p>
+        </div>
       </div>
     </div>
   );

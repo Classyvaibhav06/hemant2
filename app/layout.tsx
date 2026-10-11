@@ -1,6 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Anton, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton",
+  display: "swap",
+});
 
 const geist = Geist({
   subsets: ["latin"],
@@ -15,20 +22,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FreightDesk — Transport Management",
+  title: "FREIGHTDESK — Transport Management",
   description: "Bookings, dispatch, tracking, ledger and dashboard",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0a0a0a",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
-      <body className="bg-[#0a0a0a] font-sans text-[#e7e9ea] antialiased">{children}</body>
+    <html lang="en" className={`${anton.variable} ${geist.variable} ${geistMono.variable}`}>
+      <body className="bg-black font-sans text-[#ededed] antialiased">{children}</body>
     </html>
   );
 }

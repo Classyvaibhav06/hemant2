@@ -16,7 +16,7 @@ export function LogoutButton({ className }: { className?: string }) {
       aria-label="Sign out"
       className={
         className ??
-        "grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[#525252] transition hover:bg-white/[0.06] hover:text-[#f4212e]"
+        "grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[#525252] transition hover:bg-white/[0.06] hover:text-[#ff3355]"
       }
     >
       <SignOut size={18} />

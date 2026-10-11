@@ -10,13 +10,11 @@ import {
 export const dynamic = "force-dynamic";
 
 const TINT: Record<string, string> = {
-  blue:    "bg-accent-500/15 text-accent-400",
-  green:   "bg-[#00ba7c]/15 text-[#00ba7c]",
-  amber:   "bg-[#ffd400]/10 text-[#ffd400]",
-  red:     "bg-[#f4212e]/15 text-[#f4212e]",
-  violet:  "bg-violet-500/15 text-violet-400",
-  sky:     "bg-sky-500/15 text-sky-400",
-  slate:   "bg-white/[0.06] text-[#71767b]",
+  orange: "bg-[#ff4d00]/[0.12] text-[#ff6a1f]",
+  green:  "bg-[#00e08c]/[0.09] text-[#00e08c]",
+  yellow: "bg-[#ffd400]/[0.08] text-[#ffd400]",
+  red:    "bg-[#ff3355]/[0.09] text-[#ff3355]",
+  slate:  "bg-white/[0.06] text-[#8a8a8a]",
 };
 
 export default async function DashboardPage() {
@@ -63,81 +61,119 @@ export default async function DashboardPage() {
         SELECT 1 FROM rate_configs r WHERE r.vendor_id=v.id AND r.active=1) LIMIT 3`).all() as any[];
     for (const v of noRate) alerts.push({ text: `No active rates: ${v.name}`, href: "/rates", tone: "amber" });
 
-    const fmt = (n: number) => "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 0 });
+    const fmt = (n: number) => n.toLocaleString("en-IN", { maximumFractionDigits: 0 });
     const hour = new Date().getHours();
-    const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+    const greeting = hour < 12 ? "GOOD MORNING" : hour < 17 ? "GOOD AFTERNOON" : "GOOD EVENING";
+    const dateStr = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase();
 
     const kpis = [
-      { label: "Today's Bookings", value: String(todayBilties), sub: `${todayParcels} parcels`, Icon: Package, tint: "blue" },
-      { label: "Today's Revenue", value: fmt(todayRevenue), sub: `Commission ${fmt(todayCommission)}`, Icon: CurrencyInr, tint: "green" },
-      { label: "Today's Profit", value: fmt(todayProfit), sub: `Cost ${fmt(todayCost)}`, Icon: TrendUp, tint: todayProfit >= 0 ? "green" : "red" },
-      { label: "In Transit", value: String(inTransit), sub: `${outForDelivery} out for delivery`, Icon: Truck, tint: "amber" },
+      { label: "Bookings / Today", value: String(todayBilties), sub: `${todayParcels} parcels booked`, Icon: Package, tint: "orange" },
+      { label: "Revenue / Today", value: fmt(todayRevenue), sub: `Commission ${fmt(todayCommission)}`, Icon: CurrencyInr, tint: "green" },
+      { label: "Profit / Today", value: fmt(todayProfit), sub: `Cost ${fmt(todayCost)}`, Icon: TrendUp, tint: todayProfit >= 0 ? "green" : "red" },
+      { label: "In Transit", value: String(inTransit), sub: `${outForDelivery} out for delivery`, Icon: Truck, tint: "yellow" },
     ];
 
     const stats = [
-      { label: "Parcels Today", value: String(todayParcels), Icon: Package, tint: "sky" },
-      { label: "Dispatched", value: String(todayDispatched), Icon: PaperPlaneTilt, tint: "blue" },
+      { label: "Parcels Today", value: String(todayParcels), Icon: Package, tint: "slate" },
+      { label: "Dispatched", value: String(todayDispatched), Icon: PaperPlaneTilt, tint: "orange" },
       { label: "Delivered", value: String(delivered), Icon: CheckCircle, tint: "green" },
-      { label: "Pending", value: String(pendingDelivery), Icon: Clock, tint: "amber" },
+      { label: "Pending", value: String(pendingDelivery), Icon: Clock, tint: "yellow" },
       { label: "Undelivered", value: String(undelivered), Icon: Warning, tint: "red" },
       { label: "COD Today", value: fmt(codToday), Icon: Wallet, tint: "green" },
       { label: "Receivable", value: fmt(receivable), Icon: CurrencyInr, tint: "red" },
       { label: "Vendor Payable", value: fmt(vendorPayable), Icon: Truck, tint: "slate" },
     ];
 
+    const ticker = [
+      `BOOKINGS ${todayBilties}`,
+      `PARCELS ${todayParcels}`,
+      `REVENUE ₹${fmt(todayRevenue)}`,
+      `PROFIT ₹${fmt(todayProfit)}`,
+      `IN TRANSIT ${inTransit}`,
+      `DELIVERED ${delivered}`,
+      `RECEIVABLE ₹${fmt(receivable)}`,
+      `COMMISSION ₹${fmt(todayCommission)}`,
+    ];
+
     return (
       <div className="space-y-5 md:space-y-6">
         {/* ── Header ── */}
-        <div className="animate-fade-up flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="animate-fade-up flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-[#e7e9ea] sm:text-[26px]">
-              {greeting}, <span className="text-accent-400">{user.name.split(" ")[0]}</span>
+            <div className="mb-3 flex items-center gap-2.5 font-mono text-[9px] font-bold tracking-[0.28em] text-[#5a5a5a] uppercase">
+              <span className="h-1.5 w-1.5 bg-[#ff4d00]" />
+              OPS / OVERVIEW
+              <span className="h-px w-8 bg-white/[0.12]" />
+              <span className="text-[#3f3f3f]">{dateStr}</span>
+            </div>
+            <h1 className="font-display text-[clamp(2.4rem,5vw,3.6rem)] leading-[0.95] tracking-wide text-white uppercase">
+              {greeting},{" "}
+              <span className="text-[#ff4d00]">{user.name.split(" ")[0].toUpperCase()}</span>
             </h1>
-            <p className="mt-0.5 text-sm text-[#71767b]">
-              {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-            </p>
           </div>
           {can(user.role, "add") && (
-            <Link href="/bilty/new" className="btn-primary shrink-0 text-sm">
-              <Plus size={16} weight="bold" />
+            <Link href="/bilty/new" className="btn-primary shrink-0">
+              <Plus size={14} weight="bold" />
               New Bilty
             </Link>
           )}
         </div>
 
-        {/* ── KPI Cards ── */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 md:gap-4">
+        {/* ── Live ops ticker ── */}
+        <div className="animate-fade-up overflow-hidden border-y border-white/[0.08]" style={{ animationDelay: "60ms" }}>
+          <div className="marquee-mask flex w-max animate-marquee py-2.5">
+            {[...ticker, ...ticker].map((t, i) => (
+              <span
+                key={i}
+                className="flex shrink-0 items-center gap-3 pr-3 font-mono text-[10px] font-bold tracking-[0.22em] text-[#8a8a8a] uppercase"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 bg-[#ff4d00]" />
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ── KPI cards: hairline grid ── */}
+        <div className="grid grid-cols-2 gap-px border border-white/[0.08] bg-white/[0.08] lg:grid-cols-4">
           {kpis.map((k, i) => (
             <div
               key={k.label}
-              className="card animate-fade-up p-4 md:p-5"
-              style={{ animationDelay: `${i * 60}ms` }}
+              className="animate-fade-up group relative bg-black p-4 transition-colors hover:bg-[#0d0d0d] md:p-5"
+              style={{ animationDelay: `${120 + i * 60}ms` }}
             >
-              <div className="mb-3 flex items-center gap-2.5">
-                <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${TINT[k.tint]}`}>
-                  <k.Icon size={18} weight="fill" />
+              <div className="mb-4 flex items-start justify-between gap-2">
+                <span className="font-mono text-[9px] leading-tight font-bold tracking-[0.2em] text-[#5a5a5a] uppercase">
+                  {k.label}
                 </span>
-                <span className="text-[10px] leading-tight font-bold tracking-wider text-[#525252] uppercase">{k.label}</span>
+                <span className={`grid h-7 w-7 shrink-0 place-items-center ${TINT[k.tint]}`}>
+                  <k.Icon size={14} weight="fill" />
+                </span>
               </div>
-              <div className="text-2xl font-bold tracking-tight text-[#e7e9ea] md:text-[26px]">{k.value}</div>
-              <div className="mt-0.5 text-xs text-[#71767b]">{k.sub}</div>
+              <div className="font-display text-[clamp(1.7rem,3.2vw,2.4rem)] leading-none tracking-wide text-white">
+                {k.value}
+              </div>
+              <div className="mt-2 font-mono text-[9px] tracking-[0.14em] text-[#5a5a5a] uppercase">
+                {k.sub}
+              </div>
+              <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#ff4d00] transition-all duration-300 group-hover:w-full" />
             </div>
           ))}
         </div>
 
-        {/* ── Secondary Stats ── */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-          {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className="card animate-fade-up p-3.5"
-              style={{ animationDelay: `${(i + 4) * 40}ms` }}
-            >
-              <span className={`mb-2 grid h-7 w-7 place-items-center rounded-lg ${TINT[s.tint]}`}>
-                <s.Icon size={14} weight="fill" />
+        {/* ── Secondary stats: hairline grid ── */}
+        <div className="animate-fade-up grid grid-cols-2 gap-px border border-white/[0.08] bg-white/[0.08] sm:grid-cols-4 lg:grid-cols-8" style={{ animationDelay: "180ms" }}>
+          {stats.map((s) => (
+            <div key={s.label} className="bg-black p-3.5 transition-colors hover:bg-[#0d0d0d]">
+              <span className={`mb-2.5 grid h-6 w-6 place-items-center ${TINT[s.tint]}`}>
+                <s.Icon size={13} weight="fill" />
               </span>
-              <div className="text-[15px] font-bold tracking-tight text-[#e7e9ea]">{s.value}</div>
-              <div className="mt-0.5 text-[10px] font-semibold text-[#525252] leading-tight">{s.label}</div>
+              <div className="font-mono text-[14px] font-bold tracking-tight text-white tabular-nums">
+                {s.value}
+              </div>
+              <div className="mt-0.5 font-mono text-[8px] leading-tight font-bold tracking-[0.16em] text-[#5a5a5a] uppercase">
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
@@ -145,19 +181,21 @@ export default async function DashboardPage() {
         {/* ── Trends + Alerts ── */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {/* Revenue vs Cost chart */}
-          <div className="card animate-fade-up p-5 lg:col-span-2" style={{ animationDelay: "80ms" }}>
-            <div className="mb-4 flex items-center justify-between">
+          <div className="card animate-fade-up p-5 lg:col-span-2" style={{ animationDelay: "240ms" }}>
+            <div className="mb-5 flex items-center justify-between">
               <div>
-                <h2 className="text-[14px] font-bold tracking-tight text-[#e7e9ea]">Revenue vs Cost</h2>
-                <p className="text-xs text-[#71767b]">Last 7 days</p>
+                <div className="panel-title">Revenue vs Cost</div>
+                <p className="mt-1 font-mono text-[9px] tracking-[0.2em] text-[#5a5a5a] uppercase">
+                  Last 7 days
+                </p>
               </div>
-              <div className="flex items-center gap-4 text-[11px] font-semibold text-[#525252]">
+              <div className="flex items-center gap-4 font-mono text-[9px] font-bold tracking-[0.16em] text-[#5a5a5a] uppercase">
                 <span className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-accent-500" />
+                  <span className="h-2 w-2 bg-[#ff4d00]" />
                   Revenue
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-[#f4212e]/70" />
+                  <span className="h-2 w-2 bg-white/25" />
                   Cost
                 </span>
               </div>
@@ -166,20 +204,24 @@ export default async function DashboardPage() {
           </div>
 
           {/* Alerts panel */}
-          <div className="card animate-fade-up flex flex-col p-5" style={{ animationDelay: "140ms" }}>
-            <div className="mb-4 flex items-center gap-2">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#ffd400]/10 text-[#ffd400]">
-                <Warning size={16} weight="fill" />
+          <div className="card animate-fade-up flex flex-col p-5" style={{ animationDelay: "300ms" }}>
+            <div className="mb-4 flex items-center justify-between">
+              <div className="panel-title">Alerts</div>
+              <span className="font-mono text-[9px] font-bold tracking-[0.2em] text-[#5a5a5a] uppercase">
+                {alerts.length > 0 ? `${String(alerts.length).padStart(2, "0")} ACTIVE` : "CLEAR"}
               </span>
-              <h2 className="text-[14px] font-bold tracking-tight text-[#e7e9ea]">Alerts</h2>
             </div>
             {alerts.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-2 py-8 text-center">
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#00ba7c]/10 text-[#00ba7c]">
+                <span className="grid h-12 w-12 place-items-center border border-[#00e08c]/30 bg-[#00e08c]/[0.07] text-[#00e08c]">
                   <Sparkle size={22} weight="fill" />
                 </span>
-                <div className="text-sm font-semibold text-[#e7e9ea]">All clear</div>
-                <div className="text-xs text-[#71767b]">Operations running smoothly</div>
+                <div className="mt-1 font-mono text-[11px] font-bold tracking-[0.16em] text-white uppercase">
+                  All clear
+                </div>
+                <div className="font-mono text-[9px] tracking-[0.14em] text-[#5a5a5a] uppercase">
+                  Operations running smooth
+                </div>
               </div>
             ) : (
               <div className="space-y-2">
@@ -187,22 +229,27 @@ export default async function DashboardPage() {
                   <Link
                     key={i}
                     href={a.href}
-                    className={`group flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-[12px] font-medium transition ${
+                    className={`group flex items-stretch border transition-colors ${
                       a.tone === "red"
-                        ? "border-[#f4212e]/20 bg-[#f4212e]/8 text-[#f4212e] hover:bg-[#f4212e]/12"
-                        : "border-[#ffd400]/20 bg-[#ffd400]/8 text-[#ffd400] hover:bg-[#ffd400]/12"
+                        ? "border-[#ff3355]/25 bg-[#ff3355]/[0.06] hover:bg-[#ff3355]/[0.12]"
+                        : "border-[#ffd400]/25 bg-[#ffd400]/[0.05] hover:bg-[#ffd400]/[0.1]"
                     }`}
                   >
-                    <Warning size={14} weight="fill" className="shrink-0 opacity-80" />
-                    <span className="flex-1 leading-snug">{a.text}</span>
-                    <ArrowRight size={13} className="shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
+                    <span className={`w-[3px] shrink-0 ${a.tone === "red" ? "bg-[#ff3355]" : "bg-[#ffd400]"}`} />
+                    <span className="flex flex-1 items-center gap-2.5 px-3 py-2.5 font-mono text-[11px] leading-snug font-medium tracking-wide text-[#d9d9d9]">
+                      <Warning size={13} weight="fill" className={`shrink-0 ${a.tone === "red" ? "text-[#ff3355]" : "text-[#ffd400]"}`} />
+                      <span className="flex-1">{a.text}</span>
+                      <ArrowRight size={12} className="shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
+                    </span>
                   </Link>
                 ))}
               </div>
             )}
-            <div className="mt-4 flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.03] px-3.5 py-2.5 text-xs">
-              <span className="font-medium text-[#71767b]">Today's commission</span>
-              <b className="font-bold text-accent-400">{fmt(todayCommission)}</b>
+            <div className="mt-4 flex items-center justify-between border border-white/[0.08] bg-white/[0.02] px-3.5 py-2.5">
+              <span className="font-mono text-[9px] font-bold tracking-[0.18em] text-[#5a5a5a] uppercase">
+                Today's commission
+              </span>
+              <b className="font-mono text-[13px] font-bold text-[#ff4d00] tabular-nums">₹{fmt(todayCommission)}</b>
             </div>
           </div>
         </div>
@@ -210,8 +257,8 @@ export default async function DashboardPage() {
     );
   } catch (err: any) {
     return (
-      <div className="card-p border border-[#f4212e]/20 bg-[#f4212e]/8 text-[#f4212e]">
-        <h2 className="mb-2 text-lg font-bold">Dashboard Error</h2>
+      <div className="border border-[#ff3355]/30 bg-[#ff3355]/[0.06] p-5 text-[#ff3355]">
+        <h2 className="mb-2 font-display text-xl tracking-wide uppercase">Dashboard Error</h2>
         <p className="font-mono text-sm whitespace-pre-wrap">{err?.message || String(err)}</p>
         <pre className="mt-4 overflow-auto text-xs opacity-70">{err?.stack}</pre>
       </div>
@@ -224,39 +271,49 @@ function TrendChart({ rows }: { rows: any[] }) {
   if (rows.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-12 text-center">
-        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/[0.04] text-[#525252]">
+        <span className="grid h-12 w-12 place-items-center border border-white/[0.1] text-[#4a4a4a]">
           <Crosshair size={22} />
         </span>
-        <div className="text-sm font-semibold text-[#71767b]">No bookings in the last 7 days</div>
+        <div className="mt-1 font-mono text-[11px] font-bold tracking-[0.16em] text-[#5a5a5a] uppercase">
+          No bookings in the last 7 days
+        </div>
       </div>
     );
   }
   return (
     <div className="space-y-4">
       {rows.map((r: any) => (
-        <div key={r.d} className="flex items-center gap-3">
-          <span className="w-11 shrink-0 font-mono text-[10px] font-bold text-[#525252]">{r.d.slice(5)}</span>
-          <div className="min-w-0 flex-1 space-y-1.5">
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+        <div key={r.d} className="group flex items-center gap-3">
+          <span className="w-11 shrink-0 font-mono text-[10px] font-bold tracking-wider text-[#5a5a5a]">
+            {r.d.slice(5)}
+          </span>
+          <div className="min-w-0 flex-1 space-y-1">
+            <div className="h-1.5 w-full bg-white/[0.06]">
               <div
-                className="h-full rounded-full bg-accent-500 transition-all"
+                className="h-full bg-[#ff4d00] transition-all duration-500 group-hover:bg-[#ff6a1f]"
                 style={{ width: `${(r.revenue / max) * 100}%` }}
                 title={`Revenue ₹${r.revenue}`}
               />
             </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+            <div className="h-1.5 w-full bg-white/[0.06]">
               <div
-                className="h-full rounded-full bg-[#f4212e]/60 transition-all"
+                className="h-full bg-white/25 transition-all duration-500"
                 style={{ width: `${(r.cost / max) * 100}%` }}
                 title={`Cost ₹${r.cost}`}
               />
             </div>
           </div>
           <div className="w-14 shrink-0 text-right">
-            <span className={`text-xs font-bold ${(r.revenue - r.cost) >= 0 ? "text-[#00ba7c]" : "text-[#f4212e]"}`}>
+            <span
+              className={`font-mono text-xs font-bold tabular-nums ${
+                r.revenue - r.cost >= 0 ? "text-[#00e08c]" : "text-[#ff3355]"
+              }`}
+            >
               ₹{Math.round(r.revenue - r.cost)}
             </span>
-            <span className="block text-[9px] font-medium text-[#525252]">{r.bilties} bilty</span>
+            <span className="block font-mono text-[8px] font-bold tracking-[0.14em] text-[#4a4a4a] uppercase">
+              {r.bilties} bilty
+            </span>
           </div>
         </div>
       ))}

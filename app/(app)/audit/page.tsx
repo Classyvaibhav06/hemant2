@@ -16,10 +16,10 @@ export default async function AuditPage() {
       <div className="animate-fade-up">
         <div className="flex items-center gap-2">
           <ClockCounterClockwise size={16} className="text-accent-400" />
-          <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">System Activity</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-[#a3a3a3]">System Activity</span>
         </div>
-        <h1 className="mt-1 text-xl font-bold tracking-tight text-[#e7e9ea] sm:text-2xl">Audit Trails</h1>
-        <p className="mt-0.5 text-xs text-[#71767b]">Last {rows.length} recorded system events and actor modifications</p>
+        <h1 className="font-display mt-1 text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">Audit Trails</h1>
+        <p className="mt-0.5 text-xs text-[#a3a3a3]">Last {rows.length} recorded system events and actor modifications</p>
       </div>
 
       <div className="card overflow-x-auto animate-fade-up">
@@ -37,10 +37,10 @@ export default async function AuditPage() {
           <tbody className="divide-y divide-white/[0.05]">
             {rows.map((a) => (
               <tr key={a.id} className="transition-colors hover:bg-white/[0.03]">
-                <td className="td font-mono text-xs text-[#71767b] whitespace-nowrap">
+                <td className="td font-mono text-xs text-[#a3a3a3] whitespace-nowrap">
                   {new Date(a.at).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "medium" })}
                 </td>
-                <td className="td text-xs font-semibold text-[#e7e9ea]">{a.username}</td>
+                <td className="td text-xs font-semibold text-[#ededed]">{a.username}</td>
                 <td className="td">
                   <span className="inline-flex rounded-md bg-accent-500/10 px-2 py-0.5 font-mono text-[11px] font-bold text-accent-400 border border-accent-500/20">
                     {a.action}
@@ -48,12 +48,12 @@ export default async function AuditPage() {
                 </td>
                 <td className="td text-xs text-zinc-300">{a.entity}</td>
                 <td className="td font-mono text-xs text-zinc-400">{a.entity_id || "—"}</td>
-                <td className="td text-xs text-[#71767b] font-mono max-w-xs truncate">{a.details || "—"}</td>
+                <td className="td text-xs text-[#a3a3a3] font-mono max-w-xs truncate">{a.details || "—"}</td>
               </tr>
             ))}
             {rows.length === 0 && (
               <tr>
-                <td className="td py-12 text-center text-sm font-medium text-[#71767b]" colSpan={6}>
+                <td className="td py-12 text-center text-sm font-medium text-[#a3a3a3]" colSpan={6}>
                   No audit entries logged yet
                 </td>
               </tr>

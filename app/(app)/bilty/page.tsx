@@ -8,12 +8,12 @@ export const dynamic = "force-dynamic";
 
 const STATUS_TONE: Record<string, { bg: string; text: string; border: string; dot: string }> = {
   BOOKED: { bg: "bg-zinc-800/80", text: "text-zinc-300", border: "border-zinc-700/60", dot: "bg-zinc-400" },
-  DISPATCHED: { bg: "bg-sky-500/10", text: "text-sky-400", border: "border-sky-500/20", dot: "bg-sky-400" },
+  DISPATCHED: { bg: "bg-white/[0.06]", text: "text-white", border: "border-white/20", dot: "bg-white" },
   IN_TRANSIT: { bg: "bg-accent-500/10", text: "text-accent-400", border: "border-accent-500/20", dot: "bg-accent-400" },
   AT_DESTINATION: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20", dot: "bg-purple-400" },
   OUT_FOR_DELIVERY: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", dot: "bg-amber-400" },
-  DELIVERED: { bg: "bg-[#00ba7c]/10", text: "text-[#00ba7c]", border: "border-[#00ba7c]/20", dot: "bg-[#00ba7c]" },
-  UNDELIVERED: { bg: "bg-[#f4212e]/10", text: "text-[#f4212e]", border: "border-[#f4212e]/20", dot: "bg-[#f4212e]" },
+  DELIVERED: { bg: "bg-[#00e08c]/10", text: "text-[#00e08c]", border: "border-[#00e08c]/20", dot: "bg-[#00e08c]" },
+  UNDELIVERED: { bg: "bg-[#ff3355]/10", text: "text-[#ff3355]", border: "border-[#ff3355]/20", dot: "bg-[#ff3355]" },
 };
 
 const STATUSES = ["BOOKED", "DISPATCHED", "IN_TRANSIT", "AT_DESTINATION", "OUT_FOR_DELIVERY", "DELIVERED", "UNDELIVERED"];
@@ -37,10 +37,10 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
         <div>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-accent-500 animate-pulse" />
-            <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Consignments</span>
+            <span className="font-mono text-xs uppercase tracking-wider text-[#a3a3a3]">Consignments</span>
           </div>
-          <h1 className="mt-1 text-xl font-bold tracking-tight text-[#e7e9ea] sm:text-2xl">Bilties & Bookings</h1>
-          <p className="mt-0.5 text-xs text-[#71767b]">
+          <h1 className="font-display mt-1 text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">Bilties & Bookings</h1>
+          <p className="mt-0.5 text-xs text-[#a3a3a3]">
             {rows.length} {rows.length === 1 ? "consignment" : "consignments"}
             {sp.status ? ` · ${sp.status.replaceAll("_", " ")}` : ""}
           </p>
@@ -57,7 +57,7 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
       <div className="card animate-fade-up space-y-3 p-3.5" style={{ animationDelay: "40ms" }}>
         <form className="flex flex-col gap-2 sm:flex-row" action="/bilty">
           <div className="relative flex-1">
-            <MagnifyingGlass size={17} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#71767b]" />
+            <MagnifyingGlass size={17} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#a3a3a3]" />
             <input
               name="q"
               defaultValue={sp.q}
@@ -71,9 +71,9 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
             defaultValue={sp.status || ""}
             className="input sm:w-44 text-sm"
           >
-            <option value="" className="bg-[#111111] text-[#e7e9ea]">All statuses</option>
+            <option value="" className="bg-[#111111] text-[#ededed]">All statuses</option>
             {STATUSES.map((s) => (
-              <option key={s} value={s} className="bg-[#111111] text-[#e7e9ea]">{s.replaceAll("_", " ")}</option>
+              <option key={s} value={s} className="bg-[#111111] text-[#ededed]">{s.replaceAll("_", " ")}</option>
             ))}
           </select>
           <button className="btn-primary shrink-0 text-sm">Filter</button>
@@ -83,8 +83,8 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
             href="/bilty"
             className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
               !sp.status
-                ? "bg-accent-500 text-white shadow-[0_0_12px_rgba(29,155,240,0.4)]"
-                : "border border-white/[0.08] bg-white/[0.03] text-[#71767b] hover:bg-white/[0.07] hover:text-[#e7e9ea]"
+                ? "bg-accent-500 text-black shadow-[0_0_0_1px_#ff4d00]"
+                : "border border-white/[0.08] bg-white/[0.03] text-[#a3a3a3] hover:bg-white/[0.07] hover:text-[#ededed]"
             }`}
           >
             All Bilties
@@ -98,8 +98,8 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
                 href={`/bilty?status=${s}`}
                 className={`inline-flex items-center gap-1.5 shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-all ${
                   active
-                    ? "bg-accent-500 text-white shadow-[0_0_12px_rgba(29,155,240,0.4)]"
-                    : "border border-white/[0.08] bg-white/[0.03] text-[#71767b] hover:bg-white/[0.07] hover:text-[#e7e9ea]"
+                    ? "bg-accent-500 text-black shadow-[0_0_0_1px_#ff4d00]"
+                    : "border border-white/[0.08] bg-white/[0.03] text-[#a3a3a3] hover:bg-white/[0.07] hover:text-[#ededed]"
                 }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
@@ -139,16 +139,16 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
                       <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                     </Link>
                   </td>
-                  <td className="td whitespace-nowrap font-mono text-xs text-[#71767b]">{b.booking_date}</td>
-                  <td className="td font-medium text-[#e7e9ea]">{b.customer_name}</td>
+                  <td className="td whitespace-nowrap font-mono text-xs text-[#a3a3a3]">{b.booking_date}</td>
+                  <td className="td font-medium text-[#ededed]">{b.customer_name}</td>
                   <td className="td">
-                    <span className="text-xs text-[#71767b]">
-                      <span className="text-[#e7e9ea]">{b.from_city}</span> <span className="text-[#525252]">→</span> <span className="text-[#e7e9ea]">{b.to_city}</span>
+                    <span className="text-xs text-[#a3a3a3]">
+                      <span className="text-[#ededed]">{b.from_city}</span> <span className="text-[#525252]">→</span> <span className="text-[#ededed]">{b.to_city}</span>
                     </span>
                   </td>
-                  <td className="td text-[#e7e9ea] text-xs">{b.receiver_name}</td>
-                  <td className="td text-right font-mono text-xs text-[#71767b]">{b.parcel_count}</td>
-                  <td className="td text-right font-mono text-xs font-bold text-[#e7e9ea]">₹{b.total_charges}</td>
+                  <td className="td text-[#ededed] text-xs">{b.receiver_name}</td>
+                  <td className="td text-right font-mono text-xs text-[#a3a3a3]">{b.parcel_count}</td>
+                  <td className="td text-right font-mono text-xs font-bold text-[#ededed]">₹{b.total_charges}</td>
                   <td className="td">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${tone.bg} ${tone.text} ${tone.border}`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
@@ -160,7 +160,7 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
             })}
             {rows.length === 0 && (
               <tr>
-                <td className="td py-12 text-center text-sm font-medium text-[#71767b]" colSpan={8}>
+                <td className="td py-12 text-center text-sm font-medium text-[#a3a3a3]" colSpan={8}>
                   No bilties found matching the criteria
                 </td>
               </tr>
@@ -172,7 +172,7 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
       {/* Mobile card list (X Feed style) */}
       <div className="space-y-2.5 sm:hidden">
         {rows.length === 0 && (
-          <div className="card p-8 text-center text-sm font-medium text-[#71767b]">
+          <div className="card p-8 text-center text-sm font-medium text-[#a3a3a3]">
             No bilties found
           </div>
         )}
@@ -192,15 +192,15 @@ export default async function BiltyListPage({ searchParams }: { searchParams: Pr
                   {b.status.replaceAll("_", " ")}
                 </span>
               </div>
-              <div className="text-sm font-bold text-[#e7e9ea]">{b.receiver_name}</div>
-              <div className="mt-0.5 text-xs text-[#71767b]">
+              <div className="text-sm font-bold text-[#ededed]">{b.receiver_name}</div>
+              <div className="mt-0.5 text-xs text-[#a3a3a3]">
                 {b.customer_name} · <span className="text-[#a3a3a3]">{b.from_city} → {b.to_city}</span>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-2.5 text-xs">
-                <span className="font-mono text-[#71767b]">{b.booking_date}</span>
-                <span className="flex items-center gap-1.5 font-bold text-[#e7e9ea]">
+                <span className="font-mono text-[#a3a3a3]">{b.booking_date}</span>
+                <span className="flex items-center gap-1.5 font-bold text-[#ededed]">
                   ₹{b.total_charges} · {b.parcel_count} pcs
-                  <CaretRight size={14} className="text-[#71767b]" />
+                  <CaretRight size={14} className="text-[#a3a3a3]" />
                 </span>
               </div>
             </Link>

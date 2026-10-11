@@ -5,12 +5,12 @@ import { MagnifyingGlass, Crosshair, Warning, CheckCircle, ArrowRight, Clock, Ma
 
 const STATUS_TONE: Record<string, { bg: string; text: string; border: string; dot: string }> = {
   BOOKED: { bg: "bg-zinc-800/80", text: "text-zinc-300", border: "border-zinc-700/60", dot: "bg-zinc-400" },
-  DISPATCHED: { bg: "bg-sky-500/10", text: "text-sky-400", border: "border-sky-500/20", dot: "bg-sky-400" },
+  DISPATCHED: { bg: "bg-white/[0.06]", text: "text-white", border: "border-white/20", dot: "bg-white" },
   IN_TRANSIT: { bg: "bg-accent-500/10", text: "text-accent-400", border: "border-accent-500/20", dot: "bg-accent-400" },
   AT_DESTINATION: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20", dot: "bg-purple-400" },
   OUT_FOR_DELIVERY: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20", dot: "bg-amber-400" },
-  DELIVERED: { bg: "bg-[#00ba7c]/10", text: "text-[#00ba7c]", border: "border-[#00ba7c]/20", dot: "bg-[#00ba7c]" },
-  UNDELIVERED: { bg: "bg-[#f4212e]/10", text: "text-[#f4212e]", border: "border-[#f4212e]/20", dot: "bg-[#f4212e]" },
+  DELIVERED: { bg: "bg-[#00e08c]/10", text: "text-[#00e08c]", border: "border-[#00e08c]/20", dot: "bg-[#00e08c]" },
+  UNDELIVERED: { bg: "bg-[#ff3355]/10", text: "text-[#ff3355]", border: "border-[#ff3355]/20", dot: "bg-[#ff3355]" },
 };
 
 export function TrackingClient({ role }: { role: string }) {
@@ -60,16 +60,16 @@ export function TrackingClient({ role }: { role: string }) {
       <div className="animate-fade-up">
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-accent-500 animate-pulse" />
-          <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Live Radar</span>
+          <span className="font-mono text-xs uppercase tracking-wider text-[#a3a3a3]">Live Radar</span>
         </div>
-        <h1 className="mt-1 text-xl font-bold tracking-tight text-[#e7e9ea] sm:text-2xl">Consignment Tracking</h1>
-        <p className="mt-0.5 text-xs text-[#71767b]">Track shipments across Indian transit corridors in real-time</p>
+        <h1 className="font-display mt-1 text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">Consignment Tracking</h1>
+        <p className="mt-0.5 text-xs text-[#a3a3a3]">Track shipments across Indian transit corridors in real-time</p>
       </div>
 
       <div className="card-p animate-fade-up" style={{ animationDelay: "40ms" }}>
         <div className="flex flex-col gap-2.5 sm:flex-row">
           <div className="relative flex-1">
-            <MagnifyingGlass size={18} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#71767b]" />
+            <MagnifyingGlass size={18} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[#a3a3a3]" />
             <input
               className="input pl-10 font-mono text-sm tracking-wider uppercase placeholder:normal-case placeholder:font-sans"
               placeholder="Enter Bilty Number (e.g. BLT-2026-0001)"
@@ -84,7 +84,7 @@ export function TrackingClient({ role }: { role: string }) {
           </button>
         </div>
         {err && (
-          <div className="mt-3.5 flex items-center gap-2.5 rounded-xl border border-[#f4212e]/20 bg-[#f4212e]/10 px-4 py-3 text-xs font-semibold text-[#f4212e]">
+          <div className="mt-3.5 flex items-center gap-2.5 rounded-xl border border-[#ff3355]/20 bg-[#ff3355]/10 px-4 py-3 text-xs font-semibold text-[#ff3355]">
             <Warning size={16} weight="fill" className="shrink-0" />
             {err}
           </div>
@@ -107,26 +107,26 @@ export function TrackingClient({ role }: { role: string }) {
                       {b.status.replaceAll("_", " ")}
                     </span>
                   </div>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#71767b]">
-                    <span className="flex items-center gap-1.5 text-[#e7e9ea]">
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#a3a3a3]">
+                    <span className="flex items-center gap-1.5 text-[#ededed]">
                       <MapPin size={14} className="text-accent-400" />
                       <span>{b.from_city}</span> <span className="text-[#525252]">→</span> <span>{b.to_city}</span>
                     </span>
-                    <span className="flex items-center gap-1 text-[#71767b]">
+                    <span className="flex items-center gap-1 text-[#a3a3a3]">
                       <Package size={14} />
                       {b.parcel_count} parcel(s) · {b.chargeable_weight} kg
                     </span>
                   </div>
-                  <div className="mt-2 flex items-center gap-2 text-xs text-[#71767b]">
+                  <div className="mt-2 flex items-center gap-2 text-xs text-[#a3a3a3]">
                     <User size={14} />
-                    <span>Receiver: <b className="font-semibold text-[#e7e9ea]">{b.receiver_name}</b> {b.receiver_mobile ? `(${b.receiver_mobile})` : ""}</span>
+                    <span>Receiver: <b className="font-semibold text-[#ededed]">{b.receiver_name}</b> {b.receiver_mobile ? `(${b.receiver_mobile})` : ""}</span>
                   </div>
                 </div>
               </div>
 
               {canUpdate && data.allowedTransitions.length > 0 && (
                 <div className="mt-4 border-t border-white/[0.06] pt-4">
-                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#71767b]">Update Transit Status:</div>
+                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-[#a3a3a3]">Update Transit Status:</div>
                   <div className="flex flex-wrap gap-2">
                     {data.allowedTransitions.map((s: string) => {
                       const sTone = STATUS_TONE[s] || STATUS_TONE.BOOKED;
@@ -149,8 +149,8 @@ export function TrackingClient({ role }: { role: string }) {
             {/* Timeline */}
             <div className="card-p animate-fade-up" style={{ animationDelay: "100ms" }}>
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-sm font-bold tracking-tight text-[#e7e9ea]">Journey Milestones</h2>
-                <span className="font-mono text-xs text-[#71767b]">{data.statusHistory.length} event(s)</span>
+                <h2 className="text-sm font-bold tracking-tight text-[#ededed]">Journey Milestones</h2>
+                <span className="font-mono text-xs text-[#a3a3a3]">{data.statusHistory.length} event(s)</span>
               </div>
               <div className="relative pl-1">
                 {data.statusHistory.map((h: any, i: number) => {
@@ -167,7 +167,7 @@ export function TrackingClient({ role }: { role: string }) {
                         {isLatest ? (
                           <span className="relative flex h-4 w-4">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-4 w-4 bg-accent-500 shadow-[0_0_10px_#1d9bf0]" />
+                            <span className="relative inline-flex rounded-full h-4 w-4 bg-accent-500 shadow-[0_0_10px_#ff4d00]" />
                           </span>
                         ) : (
                           <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -176,7 +176,7 @@ export function TrackingClient({ role }: { role: string }) {
                       {/* Content */}
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs font-bold ${isLatest ? "text-[#e7e9ea]" : "text-[#71767b]"}`}>
+                          <span className={`text-xs font-bold ${isLatest ? "text-[#ededed]" : "text-[#a3a3a3]"}`}>
                             {h.status.replaceAll("_", " ")}
                           </span>
                           {isLatest && (
@@ -185,7 +185,7 @@ export function TrackingClient({ role }: { role: string }) {
                             </span>
                           )}
                         </div>
-                        <div className="mt-1 font-mono text-[11px] text-[#71767b]">
+                        <div className="mt-1 font-mono text-[11px] text-[#a3a3a3]">
                           {new Date(h.at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}
                           {" · "}
                           <span className="text-[#a3a3a3]">by {h.by}</span>

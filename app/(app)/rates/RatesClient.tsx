@@ -69,10 +69,10 @@ export function RatesClient({ role }: { role: string }) {
         <div>
           <div className="flex items-center gap-2">
             <Tag size={16} className="text-accent-400" />
-            <span className="font-mono text-xs uppercase tracking-wider text-[#71767b]">Tariff Schedules</span>
+            <span className="font-mono text-xs uppercase tracking-wider text-[#a3a3a3]">Tariff Schedules</span>
           </div>
-          <h1 className="mt-1 text-xl sm:text-2xl font-bold tracking-tight text-[#e7e9ea]">Rate Master</h1>
-          <p className="mt-0.5 text-xs text-[#71767b]">Version-controlled weight brackets & commission tariff rules</p>
+          <h1 className="font-display mt-1 text-[clamp(1.5rem,2.4vw,2rem)] leading-[0.95] tracking-wide text-white uppercase">Rate Master</h1>
+          <p className="mt-0.5 text-xs text-[#a3a3a3]">Version-controlled weight brackets & commission tariff rules</p>
         </div>
         {canEdit && (
           <button className="btn-primary text-sm shrink-0 gap-1.5" onClick={() => setEditing({} as R)}>
@@ -99,19 +99,19 @@ export function RatesClient({ role }: { role: string }) {
           <tbody className="divide-y divide-white/[0.05]">
             {rows.map((r) => (
               <tr key={r.id} className="transition-colors hover:bg-white/[0.03]">
-                <td className="td text-xs font-semibold text-[#e7e9ea]">{r.vendor_name}</td>
+                <td className="td text-xs font-semibold text-[#ededed]">{r.vendor_name}</td>
                 <td className="td text-xs text-zinc-300 font-medium">{r.name}</td>
-                <td className="td text-xs text-[#71767b]">{r.commission_type}</td>
-                <td className="td text-right font-mono text-xs font-bold text-[#00ba7c]">₹{r.commission_value}</td>
+                <td className="td text-xs text-[#a3a3a3]">{r.commission_type}</td>
+                <td className="td text-right font-mono text-xs font-bold text-[#00e08c]">₹{r.commission_value}</td>
                 <td className="td font-mono text-xs text-zinc-400">{r.min_weight} – {r.max_weight || "∞"}</td>
-                <td className="td font-mono text-xs text-[#71767b]">{r.valid_from}</td>
+                <td className="td font-mono text-xs text-[#a3a3a3]">{r.valid_from}</td>
                 <td className="td">
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
                     r.active
-                      ? "bg-[#00ba7c]/10 text-[#00ba7c] border-[#00ba7c]/20"
+                      ? "bg-[#00e08c]/10 text-[#00e08c] border-[#00e08c]/20"
                       : "bg-zinc-800 text-zinc-400 border-zinc-700/60"
                   }`}>
-                    <span className={`h-1.5 w-1.5 rounded-full ${r.active ? "bg-[#00ba7c]" : "bg-zinc-400"}`} />
+                    <span className={`h-1.5 w-1.5 rounded-full ${r.active ? "bg-[#00e08c]" : "bg-zinc-400"}`} />
                     {r.active ? "Active" : "Inactive"}
                   </span>
                 </td>
@@ -120,12 +120,12 @@ export function RatesClient({ role }: { role: string }) {
                     History
                   </button>
                   {canEdit && (
-                    <button className="text-[#71767b] hover:text-[#e7e9ea] font-medium mr-3 transition" onClick={() => setEditing(r)}>
+                    <button className="text-[#a3a3a3] hover:text-[#ededed] font-medium mr-3 transition" onClick={() => setEditing(r)}>
                       Edit
                     </button>
                   )}
                   {canDelete && (
-                    <button className="text-[#f4212e] hover:text-rose-400 font-medium transition" onClick={() => remove(r)}>
+                    <button className="text-[#ff3355] hover:text-rose-400 font-medium transition" onClick={() => remove(r)}>
                       Delete
                     </button>
                   )}
@@ -134,7 +134,7 @@ export function RatesClient({ role }: { role: string }) {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td className="td py-12 text-center text-sm font-medium text-[#71767b]" colSpan={8}>
+                <td className="td py-12 text-center text-sm font-medium text-[#a3a3a3]" colSpan={8}>
                   No rates configured yet
                 </td>
               </tr>
@@ -167,9 +167,9 @@ export function RatesClient({ role }: { role: string }) {
             <Field name="max_weight" label="Max Weight (kg, 0 = unlimited)" defaultValue={editing.max_weight ?? 0} type="number" step="0.01" />
             <div className="col-span-2 flex items-center gap-2 mt-1">
               <input type="checkbox" id="active" name="active" defaultChecked={editing.id ? !!editing.active : true} className="h-4 w-4 rounded accent-accent-500" />
-              <label htmlFor="active" className="text-xs text-[#e7e9ea] font-medium cursor-pointer">Active and selectable in bookings</label>
+              <label htmlFor="active" className="text-xs text-[#ededed] font-medium cursor-pointer">Active and selectable in bookings</label>
             </div>
-            {error && <div className="col-span-2 text-xs font-semibold text-[#f4212e]">{error}</div>}
+            {error && <div className="col-span-2 text-xs font-semibold text-[#ff3355]">{error}</div>}
             <div className="col-span-2 flex justify-end gap-2 mt-3 pt-3 border-t border-white/[0.08]">
               <button type="button" className="btn-secondary text-xs" onClick={() => setEditing(null)}>Cancel</button>
               <button type="submit" className="btn-primary text-xs">Save Rate</button>
@@ -192,7 +192,7 @@ function RateHistory({ rate, onClose }: { rate: R; onClose: () => void }) {
   return (
     <Modal title={`Rate Audit Timeline — ${rate.name}`} onClose={onClose}>
       {!rows ? (
-        <div className="text-[#71767b] text-sm py-10 text-center">Loading version history…</div>
+        <div className="text-[#a3a3a3] text-sm py-10 text-center">Loading version history…</div>
       ) : (
         <div className="card overflow-x-auto">
           <table className="w-full text-left">
@@ -209,16 +209,16 @@ function RateHistory({ rate, onClose }: { rate: R; onClose: () => void }) {
             <tbody className="divide-y divide-white/[0.05]">
               {rows.map((h) => (
                 <tr key={h.id} className="hover:bg-white/[0.02]">
-                  <td className="td font-mono text-xs text-[#71767b]">{h.valid_from}</td>
-                  <td className="td font-mono text-xs text-[#71767b]">{h.valid_to || "Current"}</td>
+                  <td className="td font-mono text-xs text-[#a3a3a3]">{h.valid_from}</td>
+                  <td className="td font-mono text-xs text-[#a3a3a3]">{h.valid_to || "Current"}</td>
                   <td className="td text-xs text-zinc-300">{h.commission_type}</td>
-                  <td className="td text-right font-mono text-xs font-bold text-[#00ba7c]">₹{h.commission_value}</td>
+                  <td className="td text-right font-mono text-xs font-bold text-[#00e08c]">₹{h.commission_value}</td>
                   <td className="td font-mono text-xs text-zinc-400">{h.min_weight}–{h.max_weight || "∞"}</td>
-                  <td className="td text-xs text-[#71767b] font-mono">{h.source}</td>
+                  <td className="td text-xs text-[#a3a3a3] font-mono">{h.source}</td>
                 </tr>
               ))}
               {rows.length === 0 && (
-                <tr><td className="td text-[#71767b] text-center py-6" colSpan={6}>No history records found</td></tr>
+                <tr><td className="td text-[#a3a3a3] text-center py-6" colSpan={6}>No history records found</td></tr>
               )}
             </tbody>
           </table>

@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   House, Package, PlusCircle, PaperPlaneTilt, Crosshair,
-  Users, Truck, Tag, Clock, DotsThree, List, X, Truck as LogoIcon,
+  Users, Truck, Tag, Clock, DotsThree, List, X, MagnifyingGlass, Truck as LogoIcon,
 } from "@phosphor-icons/react";
 import { initials } from "@/components/SidebarNav";
 import { LogoutButton } from "@/components/LogoutButton";
+import { openPalette } from "@/components/CommandPalette";
 
 export type NavItem = { href: string; label: string; icon: string };
 export type NavGroup = { title: string; items: NavItem[] };
@@ -40,23 +41,20 @@ export function MobileNav({
   user: { name: string; role: string };
 }) {
   const pathname = usePathname();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Flatten nav items
   const allItems = groups.flatMap((g) => g.items);
 
-  // Close on route change
   useEffect(() => {
-    setDrawerOpen(false);
+    setMenuOpen(false);
   }, [pathname]);
 
-  // Lock scroll when drawer open
   useEffect(() => {
-    document.body.style.overflow = drawerOpen ? "hidden" : "";
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [drawerOpen]);
+  }, [menuOpen]);
 
-  // Build bottom bar slots: 4 primary + "More" button
+  // Bottom bar slots: 2 primary tabs + FAB + next tab + overflow
   const byHref = (h: string) => allItems.find((i) => i.href === h);
   const primary = [byHref("/"), byHref("/bilty")].filter(Boolean) as NavItem[];
   const fab = byHref("/bilty/new") ?? null;
@@ -73,170 +71,204 @@ export function MobileNav({
 
   return (
     <>
-      {/* ── Mobile Top Header (with Hamburger Menu Button) ── */}
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.08] bg-[#0a0a0a]/90 px-4 backdrop-blur-xl md:hidden">
+      {/* ── Top header ── */}
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-white/[0.08] bg-black/90 px-4 backdrop-blur-xl md:hidden">
         <div className="flex items-center gap-3">
-          {/* Hamburger button */}
           <button
             type="button"
-            onClick={() => setDrawerOpen(true)}
-            className="grid h-9 w-9 cursor-pointer place-items-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-[#e7e9ea] transition active:scale-95 hover:bg-white/[0.08]"
-            aria-label="Open navigation menu"
+            onClick={() => setMenuOpen(true)}
+            className="flex cursor-pointer flex-col items-end gap-[5px] p-2 active:scale-95"
+            aria-label="Open menu"
           >
-            <List size={20} weight="bold" />
+            <span className="h-[2px] w-6 bg-white" />
+            <span className="h-[2px] w-6 bg-white" />
+            <span className="h-[2px] w-4 bg-[#ff4d00]" />
           </button>
-
           <Link href="/" className="flex items-center gap-2">
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-accent-500 text-white shadow-[0_0_12px_rgba(29,155,240,0.5)]">
+            <span className="grid h-7 w-7 place-items-center bg-[#ff4d00] text-black">
               <LogoIcon weight="fill" size={15} />
             </span>
-            <span className="text-[15px] font-bold tracking-tight text-[#e7e9ea]">FreightDesk</span>
+            <span className="font-display text-[16px] leading-none tracking-wide text-white uppercase">
+              Freight<span className="text-[#ff4d00]">Desk</span>
+            </span>
           </Link>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setDrawerOpen(true)}
-          className="flex items-center gap-2 cursor-pointer rounded-full p-1 transition hover:bg-white/[0.06]"
-          aria-label="User profile options"
-        >
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-[11px] font-bold text-white shadow-[0_0_10px_rgba(29,155,240,0.3)]">
-            {initials(user.name)}
-          </span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={openPalette}
+            className="grid h-8 w-8 cursor-pointer place-items-center border border-white/[0.1] text-[#8a8a8a] transition active:scale-95"
+            aria-label="Open command palette"
+          >
+            <MagnifyingGlass size={15} weight="bold" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            className="flex cursor-pointer items-center gap-2 p-1"
+            aria-label="Open profile menu"
+          >
+            <span className="grid h-8 w-8 place-items-center border border-white/[0.14] bg-white/[0.04] font-mono text-[10px] font-bold text-white">
+              {initials(user.name)}
+            </span>
+          </button>
+        </div>
       </header>
 
-      {/* ── Mobile Bottom Tab Bar (X / Armandev Style) ── */}
+      {/* ── Bottom tab bar ── */}
       <nav
         className="fixed inset-x-0 bottom-0 z-40 md:hidden"
         style={{ paddingBottom: "max(0px, env(safe-area-inset-bottom))" }}
         aria-label="Bottom navigation"
       >
-        <div className="border-t border-white/[0.08] bg-[#0a0a0a]/95 backdrop-blur-2xl">
-          <div className="flex h-[62px] items-center justify-around px-2">
-            {/* Left 2 tabs */}
+        <div className="border-t border-white/[0.08] bg-black/95 backdrop-blur-2xl">
+          <div className="flex h-[62px] items-stretch justify-around px-2">
             {barItems.slice(0, 2).map((item) => (
               <BottomTab key={item.href} item={item} pathname={pathname} />
             ))}
 
-            {/* Middle FAB (New Bilty) */}
             {fab && (
               <Link
                 href={fab.href}
                 className="flex flex-col items-center justify-center -mt-2"
                 aria-label={fab.label}
               >
-                <span className="grid h-12 w-12 place-items-center rounded-full bg-accent-500 text-white shadow-[0_0_20px_rgba(29,155,240,0.5)] transition-all duration-200 active:scale-90 hover:bg-accent-600">
-                  <PlusCircle weight="fill" size={28} />
+                <span className="grid h-11 w-11 place-items-center bg-[#ff4d00] text-black transition-all duration-150 active:scale-90">
+                  <PlusCircle weight="fill" size={26} />
                 </span>
-                <span className="text-[9px] font-bold tracking-wide text-accent-400 mt-0.5">New</span>
+                <span className="mt-1 font-mono text-[8px] font-bold tracking-[0.18em] text-[#ff4d00] uppercase">
+                  New
+                </span>
               </Link>
             )}
 
-            {/* Right tab(s) */}
             {barItems.slice(2).map((item) => (
               <BottomTab key={item.href} item={item} pathname={pathname} />
             ))}
 
-            {/* Overflow "More" tab */}
             {overflow.length > 0 && (
               <button
                 type="button"
-                onClick={() => setDrawerOpen(true)}
-                className="flex h-full flex-col items-center justify-center gap-0.5 px-3 text-[#71767b] transition hover:text-[#e7e9ea]"
+                onClick={() => setMenuOpen(true)}
+                className="flex h-full cursor-pointer flex-col items-center justify-center gap-0.5 px-3 text-[#7a7a7a] transition active:scale-95"
                 aria-label="More options"
               >
                 <DotsThree size={24} weight="bold" />
-                <span className="text-[9px] font-bold tracking-wide">More</span>
+                <span className="font-mono text-[8px] font-bold tracking-[0.18em] uppercase">More</span>
               </button>
             )}
           </div>
         </div>
       </nav>
 
-      {/* ── Full-screen Drawer (Hamburger Menu Sheet) ── */}
-      {drawerOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          {/* Backdrop */}
-          <div
-            className="animate-fade-in absolute inset-0 bg-black/75 backdrop-blur-md"
-            onClick={() => setDrawerOpen(false)}
-            aria-hidden="true"
-          />
-          {/* Drawer Sheet */}
-          <div className="animate-sheet-up absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-[28px] border-t border-white/[0.1] bg-[#111111] pb-[max(2rem,env(safe-area-inset-bottom))] shadow-2xl">
-            {/* Grab handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <span className="h-1.5 w-12 rounded-full bg-white/20" />
-            </div>
+      {/* ── Fullscreen VANGUARD menu ── */}
+      <div
+        className={`fixed inset-0 z-50 flex flex-col bg-black/98 backdrop-blur-sm transition-all duration-500 md:hidden ${
+          menuOpen ? "visible opacity-100" : "invisible opacity-0"
+        }`}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-white/[0.08] px-5 py-4">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center bg-[#ff4d00] text-black">
+              <LogoIcon weight="fill" size={16} />
+            </span>
+            <span className="font-display text-[18px] leading-none tracking-wide text-white uppercase">
+              Freight<span className="text-[#ff4d00]">Desk</span>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(false)}
+            className="cursor-pointer p-2 text-white transition active:scale-90"
+            aria-label="Close menu"
+          >
+            <X className="h-6 w-6" weight="bold" />
+          </button>
+        </div>
 
-            {/* User profile row */}
-            <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-xs font-bold text-white shadow-[0_0_12px_rgba(29,155,240,0.4)]">
-                  {initials(user.name)}
+        {/* Staggered links */}
+        <div className="no-scrollbar my-auto flex flex-col justify-center overflow-y-auto px-6 py-6">
+          {groups.map((g, gi) => (
+            <div key={g.title} className="mb-6 last:mb-0">
+              <div
+                className="mb-2 flex items-center gap-2 transition-all duration-500"
+                style={{
+                  transitionDelay: `${gi * 70 + 60}ms`,
+                  transform: menuOpen ? "translateY(0)" : "translateY(14px)",
+                  opacity: menuOpen ? 1 : 0,
+                }}
+              >
+                <span className="font-mono text-[9px] font-bold tracking-[0.24em] text-[#ff4d00]">
+                  {String(gi + 1).padStart(2, "0")}
                 </span>
-                <div className="min-w-0">
-                  <div className="text-[14px] font-bold text-[#e7e9ea] truncate">{user.name}</div>
-                  <div className="text-[11px] font-mono text-accent-400 font-semibold">{user.role.replaceAll("_", " ")}</div>
-                </div>
+                <span className="h-px flex-1 bg-white/[0.08]" />
+                <span className="font-mono text-[9px] font-bold tracking-[0.24em] text-[#5a5a5a] uppercase">
+                  {g.title}
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <LogoutButton className="grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[#71767b] transition hover:bg-white/[0.08] hover:text-[#f4212e]" />
-                <button
-                  type="button"
-                  onClick={() => setDrawerOpen(false)}
-                  className="grid h-9 w-9 cursor-pointer place-items-center rounded-full text-[#71767b] transition hover:bg-white/[0.08] hover:text-[#e7e9ea]"
-                  aria-label="Close"
-                >
-                  <X size={18} weight="bold" />
-                </button>
-              </div>
-            </div>
-
-            {/* All navigation groups */}
-            <div className="px-3 pt-3 pb-4">
-              {groups.map((g) => {
-                if (g.items.length === 0) return null;
+              {g.items.map((item, i) => {
+                const Icon = ICON_MAP[item.icon];
+                const active = isActive(pathname, item.href);
+                const order = gi * 4 + i;
                 return (
-                  <div key={g.title} className="mb-4">
-                    <div className="mb-1.5 px-3 text-[10px] font-bold tracking-[0.14em] text-[#525252] uppercase select-none">
-                      {g.title}
-                    </div>
-                    <div className="space-y-1">
-                      {g.items.map((item) => {
-                        const Icon = ICON_MAP[item.icon];
-                        const active = isActive(pathname, item.href);
-                        return (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setDrawerOpen(false)}
-                            className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-[14px] font-medium transition-all ${
-                              active
-                                ? "bg-white/[0.08] text-[#e7e9ea] font-semibold border-l-2 border-accent-500"
-                                : "text-[#71767b] hover:bg-white/[0.04] hover:text-[#e7e9ea]"
-                            }`}
-                          >
-                            {Icon && (
-                              <Icon
-                                size={20}
-                                weight={active ? "fill" : "regular"}
-                                className={active ? "text-accent-400" : "text-[#71767b]"}
-                              />
-                            )}
-                            <span className="flex-1">{item.label}</span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                      transitionDelay: `${order * 55 + 100}ms`,
+                      transform: menuOpen ? "translateY(0)" : "translateY(22px)",
+                      opacity: menuOpen ? 1 : 0,
+                    }}
+                    className={`flex items-center gap-4 border-b border-white/[0.06] py-3.5 transition-all duration-500 ${
+                      active ? "text-white" : "text-[#8a8a8a]"
+                    }`}
+                  >
+                    {Icon && (
+                      <Icon
+                        size={22}
+                        weight={active ? "fill" : "regular"}
+                        className={active ? "text-[#ff4d00]" : "text-[#4a4a4a]"}
+                      />
+                    )}
+                    <span className="font-display text-[30px] leading-none tracking-wide uppercase">
+                      {item.label}
+                    </span>
+                    {active && <span className="ml-auto h-2 w-2 animate-blink bg-[#ff4d00]" />}
+                  </Link>
                 );
               })}
             </div>
-          </div>
+          ))}
         </div>
-      )}
+
+        {/* Footer */}
+        <div
+          className="flex items-center justify-between border-t border-white/[0.08] px-5 py-4 transition-all duration-500"
+          style={{
+            transitionDelay: "420ms",
+            transform: menuOpen ? "translateY(0)" : "translateY(14px)",
+            opacity: menuOpen ? 1 : 0,
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center border border-white/[0.14] bg-white/[0.04] font-mono text-[11px] font-bold text-white">
+              {initials(user.name)}
+            </span>
+            <div className="min-w-0">
+              <div className="truncate font-mono text-[11px] font-bold tracking-wide text-white uppercase">
+                {user.name}
+              </div>
+              <div className="truncate font-mono text-[9px] tracking-[0.14em] text-[#ff7a3c] uppercase">
+                {user.role.replaceAll("_", " ")}
+              </div>
+            </div>
+          </div>
+          <LogoutButton className="grid h-9 w-9 cursor-pointer place-items-center border border-white/[0.1] text-[#8a8a8a] transition hover:border-[#ff3355]/40 hover:text-[#ff3355]" />
+        </div>
+      </div>
     </>
   );
 }
@@ -247,16 +279,18 @@ function BottomTab({ item, pathname }: { item: NavItem; pathname: string }) {
   return (
     <Link
       href={item.href}
-      className="flex flex-col items-center justify-center gap-0.5 h-full px-3 transition-all active:scale-95"
+      className="flex h-full flex-col items-center justify-center gap-0.5 px-3 transition-all active:scale-95"
       aria-label={item.label}
     >
-      <span className={`relative grid place-items-center transition-colors ${active ? "text-accent-400" : "text-[#71767b]"}`}>
-        {Icon && <Icon size={24} weight={active ? "fill" : "regular"} />}
-        {active && (
-          <span className="absolute -bottom-1 h-1 w-1 rounded-full bg-accent-400 shadow-[0_0_6px_#1d9bf0]" />
-        )}
+      <span className={`relative grid place-items-center transition-colors ${active ? "text-white" : "text-[#7a7a7a]"}`}>
+        {Icon && <Icon size={23} weight={active ? "fill" : "regular"} />}
+        {active && <span className="absolute -bottom-1.5 h-[3px] w-[3px] animate-blink bg-[#ff4d00]" />}
       </span>
-      <span className={`text-[9px] font-bold tracking-wide transition-colors ${active ? "text-accent-400" : "text-[#525252]"}`}>
+      <span
+        className={`font-mono text-[8px] font-bold tracking-[0.16em] uppercase transition-colors ${
+          active ? "text-white" : "text-[#4f4f4f]"
+        }`}
+      >
         {item.label}
       </span>
     </Link>
